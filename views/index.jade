@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  #logo
+   a(href="http://iknow.travel")  
+    h1= title
+   
+  #pages
+    ul
+      li
+        a(href="#page-1") Динамика числа событий
+      li
+        a(href="#page-2") Распределение событий
+      li
+        a(href="#page-3") Избранное
+      li
+        a(href="#page-4") Описание метрик
+    #page-1.pages
+      iframe(src='/firstpage', width="100%", height="600px", frameborder="no") Фреймы не поддерживается вашим браузером.
+    #page-2.pages
+      iframe(src='/firstpage', width="90%", height="600px", frameborder="no") Фреймы не поддерживается вашим браузером.
+    #page-3.pages
+      iframe(src='/firstpage', width="90%", height="600px", frameborder="no") Фреймы не поддерживается вашим браузером.
+    #page-4.pages
+      iframe(src='/description', width="100%", height="600px", frameborder="no") Фреймы не поддерживается вашим браузером.
+
+

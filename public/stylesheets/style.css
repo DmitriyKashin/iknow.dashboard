@@ -1,0 +1,57 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+background: url(../images/city-wallpaper-21.jpg) no-repeat;
+	
+	
+	background-size:cover;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+
+
+}
+
+.separator{
+	
+height:1px;
+
+background:#717171;
+
+border-bottom:1px solid white;
+
+}
+#logo {
+	width:180px;
+}
+a:visited {
+	color:black;
+}
+a:hover {
+	color:#e3e3e3;
+}
+h1 {
+  font-size: 30px;
+  line-height: 36px;
+  width:200px;
+
+  text-decoration:underline;
+  
+   font-family: 'PFDinTextCompPro-Medium',sans-serif;
+}
+#pages {
+	padding:0px;
+	border:0;
+	height:600px;
+	min-width:1350px;
+	
+
+
+}
+.pages
+{
+	padding:0px;
+	margin:0px;
+	border:1px solid #00B7FF;
+}
+

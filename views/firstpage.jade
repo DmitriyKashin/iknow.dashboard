@@ -1,0 +1,32 @@
+doctype 5
+html
+  head
+   link(rel='stylesheet', href='/stylesheets/start/jquery-ui-1.8.23.custom.css')
+   
+   script(type='text/javascript', src='javascripts/jquery-1.8.0.min.js')
+   script(type='text/javascript', src='javascripts/iknow.app.js')
+   script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.line.js')
+   script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.common.core.js')
+   script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.common.effects.js')
+   script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.common.dynamic.js')
+   script(type='text/javascript', src='javascripts/jquery-ui-1.8.23.custom.min.js')
+  body
+    b(style="font-family: 'PFDinTextCompPro-Medium',sans-serif;color:white;font-size: 30px;") Фильтры:
+    br
+    br
+
+    #metrics-denide(style="")
+
+      input(type="checkbox", id="m-denide-2", name="metrics")
+      label(for="m-denide-2")Не отображать метрику 2
+      input(type="checkbox", id="m-denide-3", name="metrics")
+      label(for="m-denide-3")Не отображать метрику 3
+    #shows-selection(style="margin-top:2%;")
+      input(type="radio", id="showtype-1",checked="checked", name="radio")
+      label(for="showtype-1")График
+      input(type="radio", id="showtype-2", name="radio")
+      label(for="showtype-2")Столбчатая диаграмма
+      input(type="radio", id="showtype-3", name="radio")
+      label(for="showtype-3")Полукруг
+    canvas(id="cvs", width="600", height="250", style="margin-top:-9%;margin-left:50%;")[No canvas support]
+    div(style="width:3px;background:#717171;height:800px;border-bottom:1px solid #313030;margin-left:45%;margin-top:-600px;")
