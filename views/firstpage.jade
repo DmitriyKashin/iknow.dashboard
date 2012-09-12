@@ -11,18 +11,28 @@ html
    script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.common.core.js')
    script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.common.effects.js')
    script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.common.dynamic.js')
+   script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.common.resizing.js')
+   script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.common.key.js')
+   script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.scatter.js')
+    script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.common.dynamic.js')
    script(type='text/javascript', src='javascripts/jquery-ui-1.8.23.custom.min.js')
   body
     b(style="font-family: 'PFDinTextCompPro-Medium',sans-serif;color:white;font-size: 30px;") Фильтры:
     br
     br
     
-    #metrics-denide(style="")
+    #metrics-denide(style="float:left;")
 
        input(type="checkbox", id="m-denide-2", name="metrics")
        label(for="m-denide-2", style="font-size:10px;")Убрать метрику 2
-       input(type="checkbox", id="m-denide-3", name="metrics")
-       label(for="m-denide-3", style="font-size:10px;")Убрать метрику 3
+      
+
+    button(style=" color:white;font-size: 10px; height:25px;width:150px; margin-left:15px; ") Нарисовать графики
+
+    button(style=" color:white;font-size: 10px; height:25px;width:150px; margin-left:15px; ") В избранное
+
+
+
     
     ul#tree(style="color:white;margin-left:0px;padding-left:5px;font-family: 'PFDinTextCompPro-Medium',sans-serif;font-size: 20px;")
 
@@ -160,7 +170,7 @@ html
            | comment
 
         
-     li(style="float:left;padding-right:0px;")
+     li(style="padding-right:0px; float:left;")
       label
        input(type="checkbox" , /) 
        | plan 
@@ -195,9 +205,13 @@ html
     
    
    
+    
+    #graph_div(style="position:absolute;top:3%;margin-left:50%;")
+      button(style="margin-top:-15px; color:white;font-size: 14px; height:25px;width:200px;position:fixed;margin-left:480px;" , id="graph_switcher") show last 60 minutes
+      canvas(id="cvs", width="700", style="max-width:1200px;",   height="350", [No canvas support])
+      
+      
 
-
-    canvas(id="cvs", width="700", height="350", style="position:absolute;top:1%;margin-left:50%;")[No canvas support]
     div(style="width:3px;background:#717171;height:1000px;border-bottom:1px solid #313030;margin-left:45%;margin-top:-600px;")
 
    
