@@ -59,6 +59,7 @@ $(function() {
         
             RGraph.Clear(document.getElementById("cvs"));
             RGraph.ObjectRegistry.Clear();
+            
         var line=  new RGraph.Line('cvs', first_metric, second_metric, third_metric);
      
         
@@ -68,7 +69,7 @@ $(function() {
 
         line.Set('chart.linewidth', 3);
         line.Set('chart.colors', ['black']);
-        line.Set('chart.ymax', 17);
+        
         line.Set('chart.key', ['Количество событий','Изменения']);
         line.Set('chart.key.position', 'gutter');
         line.Set('chart.key.position.x', 30);
@@ -109,7 +110,7 @@ $(function() {
             '50','', '', '', '', '55', '',
             '','', '', '60']);  
            };
-           
+        line.Set('chart.ymax', 17); // Максимальное значение для оси Y, когда показ по минутам. Потом сделаем динамически меняющимся.
 
 
         if (type=='hours') {
@@ -117,6 +118,7 @@ $(function() {
         
         line.Set('chart.labels', ['1','2', '3', '4', '5', '6', '7']);
         };
+        line.Set('chart.ymax', 17); // Максимальное значение для оси Y, когда показ по часам. Потом сделаем динамически меняющимся.
 
         RGraph.Effects.Line.jQuery.Trace(line);
 
@@ -150,7 +152,20 @@ $(function() {
    
            });  
 
-         
+     
+setInterval (function() {    
+    $.ajax('/dataset', {
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {  
+
+        if ($("#graph_switcher span").text()=='show last 60 minutes') drawing(data.fm, data.sm, data.tm, 'hours');  
+        if ($("#graph_switcher span").text()=='show last 7 hours') drawing(data.fm, data.sm, data.tm, 'minutes');
+
+    },
+        error  : function()     { alert('Error!!!!'); }
+    });
+}, 6000);
 
 
     
@@ -164,5 +179,12 @@ $(function() {
 
             $(document).ready(function(){
                 $("#tree").Tree();
+                // $("#tree .user label").each(function()
+               // {
+                 //   alert($(this).text());
+                // });
+
+
+    
             });
   

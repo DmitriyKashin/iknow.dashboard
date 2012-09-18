@@ -24,6 +24,20 @@ app.get "/", routes.index
 app.get "/firstpage", routes.firstpage 
 app.get "/description", routes.description
 
+first_metric =  [1.5,2.5,2.1,1.3,1.9,2.1,1.1]
+second_metric = [8+3.2-1.5,8+4.2-2.5,8+5.1-2.1,8+2.9-1.3,8+3.1-1.9,8+2.4-2.1,8+9.3-1.1]
+third_metric =  [3.4,5.1,4.2,1.2,3.4,2.8,3.1]
+
+app.get "/dataset", (req, res) ->
+
+    res.send
+      fm: first_metric
+      sm: second_metric
+      tm: third_metric
+
+      
+
+
 http.createServer(app).listen app.get("port"), ->
   console.log "Express server listening on port " + app.get("port")
 
