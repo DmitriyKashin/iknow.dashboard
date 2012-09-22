@@ -13,6 +13,8 @@ html
    script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.common.dynamic.js')
    script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.common.resizing.js')
    script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.common.key.js')
+   script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.common.context.js')
+   script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.common.tooltips.js')
    script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.scatter.js')
     script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.common.dynamic.js')
    script(type='text/javascript', src='javascripts/jquery-ui-1.8.23.custom.min.js')
@@ -21,13 +23,10 @@ html
     br
     br
     
-    #metrics-denide(style="float:left;")
-
-       input(type="checkbox", id="m-denide-2", name="metrics")
-       label(for="m-denide-2", style="font-size:10px;")Убрать метрику 2
+    input(type="hidden", id="select", value="#{title}")
       
 
-    button(style=" color:white;font-size: 10px; height:25px;width:150px; margin-left:15px; ") Нарисовать графики
+    button(style=" color:white;font-size: 10px; height:25px;width:150px; margin-left:15px; ", id = "show_graph") Нарисовать графики
 
     button(style=" color:white;font-size: 10px; height:25px;width:150px; margin-left:15px; ") В избранное
 
@@ -37,65 +36,65 @@ html
     ul#tree(style="color:white;margin-left:0px;padding-left:5px;font-family: 'PFDinTextCompPro-Medium',sans-serif;font-size: 20px;")
 
      li(style="float:left;padding-right:50px;")
-      label
+      label(id="user")
        input(type="checkbox", /)  
        | user 
       ul.user
         li
-         label
-           input(type="checkbox", /)  
+         label(id="user.show")
+           input(type="checkbox")  
            | show
          ul.show
            li
-            label
-              input(type="checkbox", /)  
+            label(id="user.show.settings")
+              input(type="checkbox")  
               | settings
            li
-            label
+            label(id="user.show.plans")
               input(type="checkbox", /)  
               | plans
            li
-            label
+            label(id="user.show.likes")
               input(type="checkbox", /)  
               | likes
-           li
+           li(id="user.show.places")
             label
               input(type="checkbox", /)  
               | places
-           li
+           li(id="user.show.events")
             label
               input(type="checkbox", /)  
               | events
-           li
+           li(id="user.show.notes")
             label
               input(type="checkbox", /)  
               | notes
-           li
+           li(id="user.show.follows")
             label
               input(type="checkbox", /)  
               | follows
-           li
+           li(id="user.show.followers")
             label
               input(type="checkbox", /)  
               | followers
         li
-            label
+            label(id="user.update")
               input(type="checkbox", /)  
               | update
         li
-            label
+            label(id="user.follow")
               input(type="checkbox", /)  
               | follow
         li
-            label
+            label(id="user.unfollow")
               input(type="checkbox", /)  
               | unfollow
         li
-            label
+            label(id="user.registrationFinished")
               input(type="checkbox", /)  
               | registrationFinished
         li
-            label
+            label(id="user.invite")
               input(type="checkbox", /)  
               | invite 
         
@@ -103,100 +102,100 @@ html
 
     
      li(style="float:left;padding-right:50px;")
-      label
+      label(id="pin")
        input(type="checkbox", /)  
        | pin 
       ul.pin
         li
-         label
+         label(id="pin.list")
            input(type="checkbox", /)  
            | list
          ul.list
             li
-             label
+             label(id="pin.list.popular")
               input(type="checkbox", /)  
               | popular
             li
-             label
+             label(id="pin.list.new")
               input(type="checkbox", /)  
               | new
             li
-             label
+             label(id="pin.list.contest")
               input(type="checkbox", /)  
               | contest
             li
-             label
+             label(id="pin.list.friends")
               input(type="checkbox", /)  
               | friends
             li
-             label
+             label(id="pin.list.userpins")
               input(type="checkbox", /)  
               | userpins
             li
-             label
+             label(id="pin.list.userlikes")
               input(type="checkbox", /)  
               | userlikes
         li
-         label
+         label(id="pin.show")
            input(type="checkbox", /)  
            | show
         li
-         label
+         label(id="pin.create")
            input(type="checkbox", /)  
            | create
         li
-         label
+         label(id="pin.update")
            input(type="checkbox", /)  
            | update
         li
-         label
+         label(id="pin.delete")
            input(type="checkbox", /)  
            | delete
         li
-         label
+         label(id="pin.like")
            input(type="checkbox", /)  
            | like
         li
-         label
+         label(id="pin.unlike")
            input(type="checkbox", /)  
            | unlike
         li
-         label
+         label(id="pin.repin")
            input(type="checkbox", /)  
            | repin
         li
-         label
+         label(id="pin.comment")
            input(type="checkbox", /)  
            | comment
 
         
      li(style="padding-right:0px; float:left;")
-      label
+      label(id="plan")
        input(type="checkbox" , /) 
        | plan 
       ul.plan
         li
-         label
+         label(id="plan.show")
            input(type="checkbox", /)  
            | show
         li
-         label
+         label(id="plan.create")
            input(type="checkbox", /)  
            | create
         li
-         label
+         label(id="plan.update")
            input(type="checkbox", /)  
            | update
         li
-         label
+         label(id="plan.delete")
            input(type="checkbox", /)  
            | delete
         li
-         label
+         label(id="plan.follow")
            input(type="checkbox", /)  
            | follow
         li
-         label
+         label(id="plan.unfollow")
            input(type="checkbox", /)  
            | unfollow
 
@@ -206,12 +205,11 @@ html
    
    
     
-    #graph_div(style="position:absolute;top:3%;margin-left:50%;")
-      button(style="margin-top:-15px; color:white;font-size: 14px; height:25px;width:200px;position:fixed;margin-left:480px;" , id="graph_switcher") show last 60 minutes
-      canvas(id="cvs", width="700", style="max-width:1200px;",   height="350", [No canvas support])
+   
       
+   
       
 
-    div(style="width:3px;background:#717171;height:1000px;border-bottom:1px solid #313030;margin-left:45%;margin-top:-600px;")
+    
 
    

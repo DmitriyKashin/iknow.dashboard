@@ -5,7 +5,11 @@ exports.index = (req, res) ->
 
 exports.firstpage = (req, res) ->
   res.render "firstpage",
-    title: "iknow.dashboard"
+    title: "iknow.dashboard.first"
+
+exports.secondpage = (req, res) ->
+  res.render "firstpage",
+    title: "iknow.dashboard.second"
 
 
 exports.description = (req, res) ->
