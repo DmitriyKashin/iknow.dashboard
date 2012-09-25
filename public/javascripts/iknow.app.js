@@ -73,7 +73,7 @@ $(document).ready(function(){
         $(".drogable" ).draggable();
 
 
-        $(".drogable").resizable({ stop: function(event, ui) {
+        $(".resize").resizable({ stop: function(event, ui) {
                 $("canvas", this).each(function() { 
                     $(this).attr({ width: ui.size.width, height: ui.size.height });
 
@@ -99,6 +99,7 @@ function drawing(first_metric, second_metric, third_metric, type, graph_id) {   
             RGraph.Clear(document.getElementById(graph_id));
             RGraph.ObjectRegistry.Clear(graph_id);
 
+
 if ($("#select").val()=='iknow.dashboard.first')                  // Если мы находимся на странице динамики событий
 
  { 
@@ -111,22 +112,18 @@ if ($("#select").val()=='iknow.dashboard.first')                  // Если м
         tooltip_metric[tooltip_count] = new Array();
         
 // Генерируем подсказки
-        if (type=='hours') {
+        
         for (i=0;i<first_metric.length;i++) {
         if (second_metric!=null) tooltip_metric[tooltip_count][i] = '<b style="color:green;"> Реальное: '+first_metric[i].toString()+'</b><br><b style="color:red;"> Изменения: '+(-second_metric[i]+first_metric[i]).toString()+'</b><br><b style="color:blue;"> Ожидаемое: '+third_metric[i]+'</b>';
         else tooltip_metric[tooltip_count][i] = '<b style="color:green;"> Реальное: '+first_metric[i].toString()+'</b>';
     }
-    }
+    
 
-     else 
-     {
-        for (i=0;i<first_metric.length;i++) {
-        if (second_metric!=null) tooltip_metric[tooltip_count][i] = '<b style="color:green;"> Реальное: '+first_metric[i].toString()+'</b><br><b style="color:red;"> Изменения: '+(-second_metric[i]+first_metric[i]).toString()+'</b><br><b style="color:blue;"> Ожидаемое: '+third_metric[i+7]+'</b>';
-        else tooltip_metric[tooltip_count][i] = '<b style="color:green;"> Реальное: '+first_metric[i].toString()+'</b>';
-     }
+     
+        
 
 
-     }
+     
 // Устанавливаем свойства объекта - графика.
       
         lines[graph_id].Set('char.ylabels.count', 3);
@@ -1006,6 +1003,7 @@ function data_selection(current_data_type_one, graph_numb)                      
 
 first_metric = [];
 second_metric = [];
+third_metric = [];
 
 
 
@@ -1145,9 +1143,9 @@ for (j=0; j<current_data_type.length; j++){
     if ((current_data_type[j] != 'pin.list') && (current_data_type[j] != 'user') && (current_data_type[j] != 'pin') && (current_data_type[j] != 'plan') && (current_data_type[j] != 'user.show') )  {
 
     if (fg==1)
-    $("body").append('<div class="drogable" style="width:1000px; height:400px; margin-top:-100px; margin-left:40%;"> <div id="graph_div-'+j+'" style=" min-width:800px; min-height:350px;border:3px solid white; width:1000px; height:380px; padding-bottom:40px; padding-top:10px; padding-left:10px;"  ><b style="color:white; ">'+current_data_type[j]+'</b><button style=" color:white;font-size: 10px; height:25px;width:200px;margin-left:100px; " id="graph_switcher-'+j+'" class="switcher">show last 60 minutes</button><button style="color:white;font-size: 10px; height:25px;width:200px;margin-left:20%;  " class = "changer" id="changes_denide-'+j+'">Denide changes</button><canvas id="'+j+'" width="1000" style="max-width: 1200px; min-width:700px; min-height:350px;" height="350" no="" canvas="" support=""></canvas></div> </div> ');    
+    $("body").append('<div class="drogable" style="width:1000px; height:400px; margin-top:-100px; margin-left:40%;"> <div class="resize" id="graph_div-'+j+'" style=" min-width:800px; min-height:350px;border:3px solid white; width:1000px; height:380px; padding-bottom:40px; padding-top:10px; padding-left:10px;"  ><b style="color:white; ">'+current_data_type[j]+'</b><button style=" color:white;font-size: 10px; height:25px;width:200px;margin-left:100px; " id="graph_switcher-'+j+'" class="switcher">show last 60 minutes</button><button style="color:white;font-size: 10px; height:25px;width:200px;margin-left:20%;  " class = "changer" id="changes_denide-'+j+'">Denide changes</button><canvas id="'+j+'" width="1000" style="max-width: 1200px; min-width:700px; min-height:350px;" height="350" no="" canvas="" support=""></canvas></div> </div> ');    
     else   
-    $("body").append('<div class="drogable" style="width:1000px; height:400px; margin-top:50px; margin-left:40%;"><div id="graph_div-'+j+'" style="min-width:800px;  min-height:350px;border:3px solid white; width:1000px; height:380px; padding-bottom:40px; padding-top:10px; padding-left:10px;" ><b style="color:white; ">'+current_data_type[j]+'</b><button style=" color:white;font-size: 10px; height:25px;width:200px;margin-left:100px; " id="graph_switcher-'+j+'" class="switcher">show last 60 minutes</button><button style="color:white;font-size: 10px; height:25px;width:200px;margin-left:20%;  " class = "changer" id="changes_denide-'+j+'">Denide changes</button><canvas id="'+j+'" width="1000" style="max-width: 1200px; min-width:700px; min-height:350px;" height="350" no="" canvas="" support=""></canvas></div> </div> ');    
+    $("body").append('<div class="drogable" style="width:1000px; height:400px; margin-top:50px; margin-left:40%;"><div class="resize" id="graph_div-'+j+'" style="min-width:800px;  min-height:350px;border:3px solid white; width:1000px; height:380px; padding-bottom:40px; padding-top:10px; padding-left:10px;" ><b style="color:white; ">'+current_data_type[j]+'</b><button style=" color:white;font-size: 10px; height:25px;width:200px;margin-left:100px; " id="graph_switcher-'+j+'" class="switcher">show last 60 minutes</button><button style="color:white;font-size: 10px; height:25px;width:200px;margin-left:20%;  " class = "changer" id="changes_denide-'+j+'">Denide changes</button><canvas id="'+j+'" width="1000" style="max-width: 1200px; min-width:700px; min-height:350px;" height="350" no="" canvas="" support=""></canvas></div> </div> ');    
             
     count=j;
     fg=0;
@@ -1177,13 +1175,13 @@ for (j=0; j<(current_data_type.length); j++){
   
  //Первый график
  if (fake==0) {
-    $("body").append('<div class="drogable" style="width:1000px; height:400px; margin-top:-100px; margin-left:40%;"><div id="graph_div-'+fake+'" style=" min-width:700px; min-height:350px;border:3px solid white; width:1000px; height:380px; padding-bottom:40px; padding-top:10px; padding-left:10px;"  ><button style="color:white;font-size: 10px; height:25px;width:200px;margin-left:20%;   " class = "changer" id="changes_denide-'+fake+'">Denide changes</button> <div id="radio'+fake+'" class ="radio" style="font-size:10px;  margin-top:-25px; width:200px; margin-left:60%; "><input type="radio" id="radio_1'+fake+'"   name="radio'+fake+'" /><label for="radio_1'+fake+'">Last Week</label><input type="radio" id="radio_2'+fake+'" checked="checked" name="radio'+fake+'" /><label for="radio_2'+fake+'">Last Day</label></div><canvas id="'+fake+'" width="1000" style="max-width: 1200px; min-width:700px; min-height:320px;" height="350" no="" canvas="" support=""></canvas></div>  </div>');    
+    $("body").append('<div class="drogable" style="width:1000px; height:400px; margin-top:-100px; margin-left:40%;"><div class="resize" id="graph_div-'+fake+'" style=" min-width:700px; min-height:350px;border:3px solid white; width:1000px; height:380px; padding-bottom:40px; padding-top:10px; padding-left:10px;"  ><button style="color:white;font-size: 10px; height:25px;width:200px;margin-left:20%;   " class = "changer" id="changes_denide-'+fake+'">Denide changes</button> <div id="radio'+fake+'" class ="radio" style="font-size:10px;  margin-top:-25px; width:200px; margin-left:60%; "><input type="radio" id="radio_1'+fake+'"   name="radio'+fake+'" /><label for="radio_1'+fake+'">Last Week</label><input type="radio" id="radio_2'+fake+'" checked="checked" name="radio'+fake+'" /><label for="radio_2'+fake+'">Last Day</label></div><canvas id="'+fake+'" width="1000" style="max-width: 1200px; min-width:700px; min-height:320px;" height="350" no="" canvas="" support=""></canvas></div>  </div>');    
     temp_id = 0;
     } 
     else
    // Если пора рисовать новый график из 5 элементов - мы это делаем.
     if ( (fake==5) || (fake==10) || (fake==15) || (fake==20) || (fake==25) || (fake==30) ) {
-    $("body").append('<div class="drogable" style="width:1000px; height:400px; margin-top:50px; margin-left:40%;"><div id="graph_div-'+fake+'" style=" min-width:700px; min-height:350px;border:3px solid white; width:1000px; height:380px; padding-bottom:40px; padding-top:10px; padding-left:10px;" ><button style="color:white;font-size: 10px; height:25px;width:200px;margin-left:20%;   " class = "changer" id="changes_denide-'+fake+'">Denide changes</button> <div id="radio'+fake+'" class ="radio" style="font-size:10px;  margin-top:-25px; width:200px; margin-left:60%; "><input type="radio" id="radio_1'+fake+'"   name="radio'+fake+'" /><label for="radio_1'+fake+'">Last Week</label><input type="radio" id="radio_2'+fake+'" checked="checked" name="radio'+fake+'" /><label for="radio_2'+fake+'">Last Day</label></div><canvas id="'+fake+'" width="1000" style="max-width: 1200px; min-width:700px; min-height:320px;" height="350" no="" canvas="" support=""></canvas></div> </div> ');    
+    $("body").append('<div class="drogable" style="width:1000px; height:400px; margin-top:50px; margin-left:40%;"><div class="resize" id="graph_div-'+fake+'" style=" min-width:700px; min-height:350px;border:3px solid white; width:1000px; height:380px; padding-bottom:40px; padding-top:10px; padding-left:10px;" ><button style="color:white;font-size: 10px; height:25px;width:200px;margin-left:20%;   " class = "changer" id="changes_denide-'+fake+'">Denide changes</button> <div id="radio'+fake+'" class ="radio" style="font-size:10px;  margin-top:-25px; width:200px; margin-left:60%; "><input type="radio" id="radio_1'+fake+'"   name="radio'+fake+'" /><label for="radio_1'+fake+'">Last Week</label><input type="radio" id="radio_2'+fake+'" checked="checked" name="radio'+fake+'" /><label for="radio_2'+fake+'">Last Day</label></div><canvas id="'+fake+'" width="1000" style="max-width: 1200px; min-width:700px; min-height:320px;" height="350" no="" canvas="" support=""></canvas></div> </div> ');    
     temp_id = fake;
 }
     count=j;
