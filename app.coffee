@@ -1010,7 +1010,7 @@ compareTotalAndLast = (total, last) ->
   else 
     all.push 1
   if total.user.invite.vk isnt last.user.invite.vk
-    all.push (last.user.invite.vk/(total.user.invite.vk - last.user.invite.vk))
+    all.push (last.user.invite.vk/(total.user.isnvite.vk - last.user.invite.vk))
   else if last.user.invite.vk is 0
     all.push 0
   else 
@@ -1067,6 +1067,8 @@ getEventsGraph()
 getEventsColumn()
 findTotalAndLast()
 
+regressStart()
+regressFinish()
   
 setInterval (->
   getEventsGraph()
