@@ -1067,8 +1067,6 @@ getEventsGraph()
 getEventsColumn()
 findTotalAndLast()
 
-regressStart()
-regressFinish()
 
 setInterval (->
   getEventsGraph()
