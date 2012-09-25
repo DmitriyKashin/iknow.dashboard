@@ -18,23 +18,18 @@ html
    script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.common.context.js')
    script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.common.tooltips.js')
    script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.scatter.js')
-    script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.common.dynamic.js')
+   script(type='text/javascript', src='javascripts/RGraph/libraries/RGraph.common.dynamic.js')
    script(type='text/javascript', src='javascripts/jquery-ui-1.8.23.custom.min.js')
   body
     b(style="font-family: 'PFDinTextCompPro-Medium',sans-serif;color:white;font-size: 30px;") Фильтры:
     br
-    br
-    
+    br  
     input(type="hidden", id="select", value="#{title}")
       
 
     button(style=" color:white;font-size: 10px; height:25px;width:150px; margin-left:15px; ", id = "show_graph") Нарисовать графики
 
-    button(style=" color:white;font-size: 10px; height:25px;width:150px; margin-left:15px; ") В избранное
-
-
-
-    
+    button(style=" color:white;font-size: 10px; height:25px;width:150px; margin-left:15px; ", id = "favorites") В избранное   
     ul#tree(style="color:white;margin-left:0px;padding-left:0px;font-family: 'PFDinTextCompPro-Medium',sans-serif;font-size: 20px;")
 
      li(style="float:left;padding-right:50px;")
@@ -59,24 +54,24 @@ html
             label(id="user.show.likes")
               input(type="checkbox", /)  
               | likes
-           li(id="user.show.places")
-            label
+           li
+            label(id="user.show.places")
               input(type="checkbox", /)  
               | places
-           li(id="user.show.events")
-            label
+           li
+            label(id="user.show.events")
               input(type="checkbox", /)  
               | events
-           li(id="user.show.notes")
-            label
+           li
+            label(id="user.show.notes")
               input(type="checkbox", /)  
               | notes
-           li(id="user.show.follows")
-            label
+           li
+            label(id="user.show.follows")
               input(type="checkbox", /)  
               | follows
-           li(id="user.show.followers")
-            label
+           li
+            label(id="user.show.followers")
               input(type="checkbox", /)  
               | followers
         li
@@ -202,6 +197,8 @@ html
            | unfollow
 
 
+    
+      
          
     
    

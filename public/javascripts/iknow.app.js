@@ -1,5 +1,10 @@
 $(document).ready(function(){
 
+   
+
+
+        var expected_data;
+        var growth_data   =[]
         var current_data = []   // Данные для динамики событий
         var change_data = []    // Изменения для динамики событий
         var column_data = []    // Данные для распределения событий. День\ неделя.
@@ -23,6 +28,8 @@ $(document).ready(function(){
         var fake_count = 0;            // fake, fake_count  - Работа с фиктивным точками в дереве событий. (Например, pin.list, user, ...  - не должно учитываться при построении)
 
 
+
+
     $.ajax('/dataset', {                                            // Получаем первый набор данных.
         type: 'GET',
         dataType: 'json',
@@ -31,9 +38,17 @@ $(document).ready(function(){
             current_data = data.graph_data;
             change_data  = data.change_data;
             column_data  = data.column_data;
+            expected_data = data.expected_data;
+            growth_data = data.growth_data;
+            if ($("#select").val()=='iknow.dashboard.second')
+            window.parent.$('#param').append('<b>Growth (root) : '+growth_data.roots+'%</b> &nbsp&nbsp&nbsp <b>Growth (average) : '+growth_data.average+'%</b>&nbsp&nbsp&nbsp<b>Pins: '+growth_data.pins+'%</b>&nbsp&nbsp&nbsp<b>Plans: '+growth_data.plans+'%</b>&nbsp&nbsp&nbsp<b>Users: '+growth_data.users+'%</b>');
+
+
+                    
+
+
+
             
-
-
 
     },
         error  : function()     {  }
@@ -75,7 +90,7 @@ $(document).ready(function(){
 newLife();
 
 
-  
+
 
 
 function drawing(first_metric, second_metric, third_metric, type, graph_id) {                                       // Функция отрисовки графиков. Тип - часы\минуты, graph_id - id канвас элемента
@@ -91,15 +106,24 @@ if ($("#select").val()=='iknow.dashboard.first')                  // Если м
 
 // Добавляем в массив линий новую, соответствующую входным параметрам
 
-        lines[graph_id]=  new RGraph.Line(graph_id, first_metric, second_metric, third_metric);
+        lines[graph_id]=  new RGraph.Line(graph_id, first_metric, second_metric);
         tooltip_count++;
         tooltip_metric[tooltip_count] = new Array();
         
 // Генерируем подсказки
-
+        if (type=='hours') {
         for (i=0;i<first_metric.length;i++) {
-        if (second_metric!=null) tooltip_metric[tooltip_count][i] = '<b style="color:green;"> Реальное: '+first_metric[i].toString()+'</b><br><b style="color:red;"> Изменения: '+(-second_metric[i]+first_metric[i]).toString()+'</b>';
+        if (second_metric!=null) tooltip_metric[tooltip_count][i] = '<b style="color:green;"> Реальное: '+first_metric[i].toString()+'</b><br><b style="color:red;"> Изменения: '+(-second_metric[i]+first_metric[i]).toString()+'</b><br><b style="color:blue;"> Ожидаемое: '+third_metric[i]+'</b>';
         else tooltip_metric[tooltip_count][i] = '<b style="color:green;"> Реальное: '+first_metric[i].toString()+'</b>';
+    }
+    }
+
+     else 
+     {
+        for (i=0;i<first_metric.length;i++) {
+        if (second_metric!=null) tooltip_metric[tooltip_count][i] = '<b style="color:green;"> Реальное: '+first_metric[i].toString()+'</b><br><b style="color:red;"> Изменения: '+(-second_metric[i]+first_metric[i]).toString()+'</b><br><b style="color:blue;"> Ожидаемое: '+third_metric[i+7]+'</b>';
+        else tooltip_metric[tooltip_count][i] = '<b style="color:green;"> Реальное: '+first_metric[i].toString()+'</b>';
+     }
 
 
      }
@@ -108,7 +132,7 @@ if ($("#select").val()=='iknow.dashboard.first')                  // Если м
         lines[graph_id].Set('char.ylabels.count', 3);
         lines[graph_id].Set('chart.linewidth', 3);
         lines[graph_id].Set('chart.colors', ['black']);    
-        lines[graph_id].Set('chart.key', ['Количество событий','Изменения']);
+        lines[graph_id].Set('chart.key', ['Количество событий','Предыдущий период']);
         lines[graph_id].Set('chart.key.position', 'gutter');
         lines[graph_id].Set('chart.key.position.x', 30);
         lines[graph_id].Set('chart.key.position.y', 30);
@@ -273,35 +297,36 @@ function proSwitcher(current_data_type_one, i)                                 /
 
 
                      case 'user.show.settings':
-                     first_metric.push(current_data[i].user.show.settings)
+                     first_metric.push(current_data[i].user.show)
                      break
 
                      case 'user.show.plans':
-                     first_metric.push(current_data[i].user.show.plans)
+                     first_metric.push(current_data[i].user.showPlans)
                      break
 
                      case 'user.show.likes':
-                     first_metric.push(current_data[i].user.show.likes)
+                     first_metric.push(current_data[i].user.showLikes)
                      break
 
                      case 'user.show.places':
-                     first_metric.push(current_data[i].user.show.likes)
+                     first_metric.push(current_data[i].user.showPlaces)
+
                      break
 
                      case 'user.show.events':
-                     first_metric.push(current_data[i].user.show.events)
+                     first_metric.push(current_data[i].user.showEvents)
                      break
 
                      case 'user.show.follows':
-                     first_metric.push(current_data[i].user.show.follow)
+                     first_metric.push(current_data[i].user.showFollows)
                      break
 
                      case 'user.show.followers':
-                     first_metric.push(current_data[i].user.show.followers)
+                     first_metric.push(current_data[i].user.showFollowers)
                      break
 
                       case 'user.show.notes':
-                     first_metric.push(current_data[i].user.show.notes)
+                     first_metric.push(current_data[i].user.showNotes)
                      break
 
                       case 'user.update':
@@ -353,6 +378,159 @@ function proSwitcher(current_data_type_one, i)                                 /
        
 
                     return first_metric;
+
+}
+
+
+function proSwitcher_4(current_data_type_one, i)                                 // Анализируем выбранные пользователем события и добавляем данные для графика.
+
+
+{
+
+    switch (current_data_type_one) {
+
+
+                     case 'pin.show' :
+                     third_metric.push(expected_data.pin.show[i])
+                     break
+
+                     case 'pin.update':
+                     third_metric.push(expected_data.pin.update[i])
+                     break
+
+                    case 'pin.list.contest':
+                     third_metric.push(expected_data.pin.list.contest[i])
+                     break
+
+                    case 'pin.list.new':
+                     third_metric.push(expected_data.pin.list.new[i])
+                     break
+
+                    case 'pin.list.popular':
+                     third_metric.push(expected_data.pin.list.popular[i])
+                     break
+
+                     case 'pin.list.friends':
+                     third_metric.push(expected_data.pin.list.friends[i])
+                     break
+                     case 'pin.list.userpins':
+                     third_metric.push(expected_data.pin.list.userpins[i])
+                     break
+                     case 'pin.list.userlikes':
+                     third_metric.push(expected_data.pin.list.userlikes[i])
+                     break
+
+                     case 'pin.create':
+                     third_metric.push(expected_data.pin.create[i])
+                     break
+
+                     case 'pin.delete':
+                     third_metric.push(expected_data.pin.delete[i])
+                     break
+
+                     case 'pin.like':
+                     third_metric.push(expected_data.pin.like[i])
+                     break
+
+                     case 'pin.unlike':
+                     third_metric.push(expected_data.pin.unlike[i])
+                     break
+
+                     case 'pin.unlike':
+                     third_metric.push(expected_data.pin.unlike[i])
+                     break
+
+                     case 'pin.repin':
+                     third_metric.push(expected_data.pin.repin[i])
+                     break
+
+                     case 'pin.comment':
+                     third_metric.push(expected_data.pin.comment[i])
+                     break
+
+
+                     case 'user.show.settings':
+                     third_metric.push(expected_data.user.show[i])
+                     break
+
+                     case 'user.show.plans':
+                     third_metric.push(expected_data.user.showPlans[i])
+                     break
+
+                     case 'user.show.likes':
+                     third_metric.push(expected_data.user.showLikes[i])
+                     break
+
+                     case 'user.show.places':
+                     third_metric.push(expected_data.user.showPlaces)
+
+                     break
+
+                     case 'user.show.events':
+                     third_metric.push(expected_data.user.showEvents[i])
+                     break
+
+                     case 'user.show.follows':
+                     third_metric.push(expected_data.user.showFollows[i])
+                     break
+
+                     case 'user.show.followers':
+                     third_metric.push(expected_data.user.showFollowers[i])
+                     break
+
+                      case 'user.show.notes':
+                     third_metric.push(expected_data.user.showNotes[i])
+                     break
+
+                      case 'user.update':
+                     third_metric.push(expected_data.user.update[i])
+                     break
+
+                      case 'user.follow':
+                     third_metric.push(expected_data.user.follow[i])
+                     break
+
+                      case 'user.unfollow':
+                     third_metric.push(expected_data.user.unfollow[i])
+                     break
+
+                      case 'user.registrationFinished':
+                     third_metric.push(expected_data.user.registrationFinished[i])
+                     break
+
+                      case 'user.invite':
+                     third_metric.push(expected_data.user.invite[i])
+                     break
+
+                     case 'plan.show':
+                     third_metric.push(expected_data.plan.show[i])
+                     break
+                     case 'plan.update':
+                     third_metric.push(expected_data.plan.update[i])
+                     break
+                     case 'plan.create':
+                     third_metric.push(expected_data.plan.create[i])
+                     break
+                     case 'plan.delete':
+                     third_metric.push(expected_data.plan.delete[i])
+                     break
+                     case 'plan.follow':
+                     third_metric.push(expected_data.plan.follow[i])
+                     break
+                     case 'plan.show':
+                     third_metric.push(expected_data.plan.show[i])
+                     break
+                     case 'plan.unfollow':
+                     third_metric.push(expected_data.plan.unfollow[i])
+                     break
+                    }
+
+
+
+                
+       
+
+                    return third_metric;
 
 }
 
@@ -432,35 +610,35 @@ function proSwitcher_2(current_data_type_one, i)                                
 
 
                      case 'user.show.settings':
-                     second_metric.push(change_data[i].user.show.settings)
+                     second_metric.push(change_data[i].user.show)
                      break
 
                      case 'user.show.plans':
-                     second_metric.push(change_data[i].user.show.plans)
+                     second_metric.push(change_data[i].user.showPlans)
                      break
 
                      case 'user.show.likes':
-                     second_metric.push(change_data[i].user.show.likes)
+                     second_metric.push(change_data[i].user.showLikes)
                      break
 
                      case 'user.show.places':
-                     second_metric.push(change_data[i].user.show.likes)
+                     second_metric.push(change_data[i].user.showPlaces)
                      break
 
                      case 'user.show.events':
-                     second_metric.push(change_data[i].user.show.events)
+                     second_metric.push(change_data[i].user.showEvents)
                      break
 
                      case 'user.show.follows':
-                     second_metric.push(change_data[i].user.show.follow)
+                     second_metric.push(change_data[i].user.showFollows)
                      break
 
                      case 'user.show.followers':
-                     second_metric.push(change_data[i].user.show.followers)
+                     second_metric.push(change_data[i].user.showFollowers)
                      break
 
                       case 'user.show.notes':
-                     second_metric.push(change_data[i].user.show.notes)
+                     second_metric.push(change_data[i].user.showNotes)
                      break
 
                       case 'user.update':
@@ -584,35 +762,35 @@ function proSwitcher_3(current_data_type_one, type)                             
 
 
                      case 'user.show.settings':
-                     bar_graph.push(column_data.day.user.show.settings)
+                     bar_graph.push(column_data.day.user.show)
                      break
 
                      case 'user.show.plans':
-                     bar_graph.push(column_data.day.user.show.plans)
+                     bar_graph.push(column_data.day.user.showPlans)
                      break
 
                      case 'user.show.likes':
-                     bar_graph.push(column_data.day.user.show.likes)
+                     bar_graph.push(column_data.day.user.showLikes)
                      break
 
                      case 'user.show.places':
-                     bar_graph.push(column_data.day.user.show.placesw)
+                     bar_graph.push(column_data.day.user.showPlaces)
                      break
 
                      case 'user.show.events':
-                     bar_graph.push(column_data.day.user.show.events)
+                     bar_graph.push(column_data.day.user.showEvents)
                      break
 
                      case 'user.show.follows':
-                     bar_graph.push(column_data.day.user.show.follows)
+                     bar_graph.push(column_data.day.user.showFollows)
                      break
 
                      case 'user.show.followers':
-                     bar_graph.push(column_data.day.user.show.followers)
+                     bar_graph.push(column_data.day.user.showFollowers)
                      break
 
                      case 'user.show.notes':
-                     bar_graph.push(column_data.day.user.show.notes)
+                     bar_graph.push(column_data.day.user.showNotes)
                      break
 
                      case 'user.update':
@@ -732,35 +910,35 @@ function proSwitcher_3(current_data_type_one, type)                             
 
 
                      case 'user.show.settings':
-                     bar_graph.push(column_data.week.user.show.settings)
+                     bar_graph.push(column_data.week.user.show)
                      break
 
                      case 'user.show.plans':
-                     bar_graph.push(column_data.week.user.show.plans)
+                     bar_graph.push(column_data.week.user.showPlans)
                      break
 
                      case 'user.show.likes':
-                     bar_graph.push(column_data.week.user.show.likes)
+                     bar_graph.push(column_data.week.user.showLikes)
                      break
 
                      case 'user.show.places':
-                     bar_graph.push(column_data.week.user.show.placesw)
+                     bar_graph.push(column_data.week.user.showPlaces)
                      break
 
                      case 'user.show.events':
-                     bar_graph.push(column_data.week.user.show.events)
+                     bar_graph.push(column_data.week.user.showEvents)
                      break
 
                      case 'user.show.follows':
-                     bar_graph.push(column_data.week.user.show.follows)
+                     bar_graph.push(column_data.week.user.showFollows)
                      break
 
                      case 'user.show.followers':
-                     bar_graph.push(column_data.week.user.show.followers)
+                     bar_graph.push(column_data.week.user.showFollowers)
                      break
 
                      case 'user.show.notes':
-                     bar_graph.push(column_data.week.user.show.notes)
+                     bar_graph.push(column_data.week.user.showNotes)
                      break
 
                      case 'user.update':
@@ -847,6 +1025,7 @@ second_metric = [];
                    
                         first_metric = proSwitcher(current_data_type_one, i);
                         second_metric = proSwitcher_2(current_data_type_one, i);
+                        third_metric = proSwitcher_4(current_data_type_one, i);
                         
                        
 
@@ -857,12 +1036,12 @@ second_metric = [];
 
 
          if ($("#changes_denide-"+graph_numb+" span").text()=='Denide changes') {
-         drawing(first_metric, second_metric, null , 'hours', graph_numb);  
+         drawing(first_metric, second_metric, third_metric , 'hours', graph_numb);  
 
          }
          else { 
 
-        drawing(first_metric, null, null , 'hours', graph_numb); 
+        drawing(first_metric, null, third_metric , 'hours', graph_numb); 
         }
 
 
@@ -883,18 +1062,19 @@ second_metric = [];
 
                    first_metric = proSwitcher(current_data_type_one, i);
                    second_metric = proSwitcher_2(current_data_type_one, i);
+                   third_metric = proSwitcher_4(current_data_type_one, i);
                    
 
                 }
             }
 
          if ($("#changes_denide-"+graph_numb+" span").text()=='Denide changes') {
-         drawing(first_metric, second_metric, null , 'minutes', graph_numb);  
+         drawing(first_metric, second_metric, third_metric , 'minutes', graph_numb);  
 
          }
          else { 
 
-        drawing(first_metric, null, null , 'minutes', graph_numb); 
+        drawing(first_metric, null, third_metric , 'minutes', graph_numb); 
         } 
 
         }
@@ -965,9 +1145,9 @@ for (j=0; j<current_data_type.length; j++){
     if ((current_data_type[j] != 'pin.list') && (current_data_type[j] != 'user') && (current_data_type[j] != 'pin') && (current_data_type[j] != 'plan') && (current_data_type[j] != 'user.show') )  {
 
     if (fg==1)
-    $("body").append('<div id="graph_div-'+j+'" style="margin-top:-100px; margin-left:40%; min-width:700px; min-height:350px;border:3px solid white; width:1000px; height:380px; padding-bottom:40px; padding-top:10px; padding-left:10px;"  class="drogable"><b style="color:white; ">'+current_data_type[j]+'</b><button style=" color:white;font-size: 10px; height:25px;width:200px;margin-left:100px; " id="graph_switcher-'+j+'" class="switcher">show last 60 minutes</button><button style="color:white;font-size: 10px; height:25px;width:200px;margin-left:20%;  " class = "changer" id="changes_denide-'+j+'">Denide changes</button><canvas id="'+j+'" width="1000" style="max-width: 1200px; min-width:700px; min-height:320px;" height="350" no="" canvas="" support=""></canvas></div>  ');    
+    $("body").append('<div style="width:1000px; height:400px; margin-top:-100px; margin-left:40%;"> <div id="graph_div-'+j+'" style=" min-width:800px; min-height:350px;border:3px solid white; width:1000px; height:380px; padding-bottom:40px; padding-top:10px; padding-left:10px;"  class="drogable"><b style="color:white; ">'+current_data_type[j]+'</b><button style=" color:white;font-size: 10px; height:25px;width:200px;margin-left:100px; " id="graph_switcher-'+j+'" class="switcher">show last 60 minutes</button><button style="color:white;font-size: 10px; height:25px;width:200px;margin-left:20%;  " class = "changer" id="changes_denide-'+j+'">Denide changes</button><canvas id="'+j+'" width="1000" style="max-width: 1200px; min-width:700px; min-height:350px;" height="350" no="" canvas="" support=""></canvas></div> </div> ');    
     else   
-    $("body").append('<div id="graph_div-'+j+'" style="margin-top:10px; margin-left:40%; min-width:700px; min-height:350px;border:3px solid white; width:1000px; height:380px; padding-bottom:40px; padding-top:10px; padding-left:10px;"  class="drogable"><b style="color:white; ">'+current_data_type[j]+'</b><button style=" color:white;font-size: 10px; height:25px;width:200px;margin-left:100px; " id="graph_switcher-'+j+'" class="switcher">show last 60 minutes</button><button style="color:white;font-size: 10px; height:25px;width:200px;margin-left:20%;  " class = "changer" id="changes_denide-'+j+'">Denide changes</button><canvas id="'+j+'" width="1000" style="max-width: 1200px; min-width:700px; min-height:320px;" height="350" no="" canvas="" support=""></canvas></div>  ');    
+    $("body").append('<div style="width:1000px; height:400px; margin-top:50px; margin-left:40%;"><div id="graph_div-'+j+'" style="min-width:800px;  min-height:350px;border:3px solid white; width:1000px; height:380px; padding-bottom:40px; padding-top:10px; padding-left:10px;"  class="drogable"><b style="color:white; ">'+current_data_type[j]+'</b><button style=" color:white;font-size: 10px; height:25px;width:200px;margin-left:100px; " id="graph_switcher-'+j+'" class="switcher">show last 60 minutes</button><button style="color:white;font-size: 10px; height:25px;width:200px;margin-left:20%;  " class = "changer" id="changes_denide-'+j+'">Denide changes</button><canvas id="'+j+'" width="1000" style="max-width: 1200px; min-width:700px; min-height:350px;" height="350" no="" canvas="" support=""></canvas></div> </div> ');    
             
     count=j;
     fg=0;
@@ -997,13 +1177,13 @@ for (j=0; j<(current_data_type.length); j++){
   
  //Первый график
  if (fake==0) {
-    $("body").append('<div id="graph_div-'+fake+'" style="margin-top:-100px; margin-left:40%; min-width:700px; min-height:350px;border:3px solid white; width:1000px; height:380px; padding-bottom:40px; padding-top:10px; padding-left:10px;"  class="drogable"><button style="color:white;font-size: 10px; height:25px;width:200px;margin-left:20%;   " class = "changer" id="changes_denide-'+fake+'">Denide changes</button> <div id="radio'+fake+'" class ="radio" style="font-size:10px;  margin-top:-25px; width:200px; margin-left:60%; "><input type="radio" id="radio_1'+fake+'"   name="radio'+fake+'" /><label for="radio_1'+fake+'">Last Week</label><input type="radio" id="radio_2'+fake+'" checked="checked" name="radio'+fake+'" /><label for="radio_2'+fake+'">Last Day</label></div><canvas id="'+fake+'" width="1000" style="max-width: 1200px; min-width:700px; min-height:320px;" height="350" no="" canvas="" support=""></canvas></div>  ');    
+    $("body").append('<div style="width:1000px; height:400px; margin-top:-100px; margin-left:40%;"><div id="graph_div-'+fake+'" style=" min-width:700px; min-height:350px;border:3px solid white; width:1000px; height:380px; padding-bottom:40px; padding-top:10px; padding-left:10px;"  class="drogable"><button style="color:white;font-size: 10px; height:25px;width:200px;margin-left:20%;   " class = "changer" id="changes_denide-'+fake+'">Denide changes</button> <div id="radio'+fake+'" class ="radio" style="font-size:10px;  margin-top:-25px; width:200px; margin-left:60%; "><input type="radio" id="radio_1'+fake+'"   name="radio'+fake+'" /><label for="radio_1'+fake+'">Last Week</label><input type="radio" id="radio_2'+fake+'" checked="checked" name="radio'+fake+'" /><label for="radio_2'+fake+'">Last Day</label></div><canvas id="'+fake+'" width="1000" style="max-width: 1200px; min-width:700px; min-height:320px;" height="350" no="" canvas="" support=""></canvas></div>  </div>');    
     temp_id = 0;
     } 
     else
    // Если пора рисовать новый график из 5 элементов - мы это делаем.
     if ( (fake==5) || (fake==10) || (fake==15) || (fake==20) || (fake==25) || (fake==30) ) {
-    $("body").append('<div id="graph_div-'+fake+'" style="margin-top:10px; margin-left:40%; min-width:700px; min-height:350px;border:3px solid white; width:1000px; height:380px; padding-bottom:40px; padding-top:10px; padding-left:10px;"  class="drogable"><button style="color:white;font-size: 10px; height:25px;width:200px;margin-left:20%;   " class = "changer" id="changes_denide-'+fake+'">Denide changes</button> <div id="radio'+fake+'" class ="radio" style="font-size:10px;  margin-top:-25px; width:200px; margin-left:60%; "><input type="radio" id="radio_1'+fake+'"   name="radio'+fake+'" /><label for="radio_1'+fake+'">Last Week</label><input type="radio" id="radio_2'+fake+'" checked="checked" name="radio'+fake+'" /><label for="radio_2'+fake+'">Last Day</label></div><canvas id="'+fake+'" width="1000" style="max-width: 1200px; min-width:700px; min-height:320px;" height="350" no="" canvas="" support=""></canvas></div>  ');    
+    $("body").append('<div style="width:1000px; height:400px; margin-top:50px; margin-left:40%;"><div id="graph_div-'+fake+'" style=" min-width:700px; min-height:350px;border:3px solid white; width:1000px; height:380px; padding-bottom:40px; padding-top:10px; padding-left:10px;"  class="drogable"><button style="color:white;font-size: 10px; height:25px;width:200px;margin-left:20%;   " class = "changer" id="changes_denide-'+fake+'">Denide changes</button> <div id="radio'+fake+'" class ="radio" style="font-size:10px;  margin-top:-25px; width:200px; margin-left:60%; "><input type="radio" id="radio_1'+fake+'"   name="radio'+fake+'" /><label for="radio_1'+fake+'">Last Week</label><input type="radio" id="radio_2'+fake+'" checked="checked" name="radio'+fake+'" /><label for="radio_2'+fake+'">Last Day</label></div><canvas id="'+fake+'" width="1000" style="max-width: 1200px; min-width:700px; min-height:320px;" height="350" no="" canvas="" support=""></canvas></div> </div> ');    
     temp_id = fake;
 }
     count=j;
@@ -1131,6 +1311,8 @@ setInterval (function() {     // Получаем актуальную инфо�
             current_data = data.graph_data;
             change_data  = data.change_data;
             column_data  = data.column_data;
+            expected_data = data.expected_data;
+            growth_data = data.growth_data;
 
 
         if ($("#select").val()=='iknow.dashboard.first') {       // Обновляем все текущие графики на странице динамики событий.
@@ -1157,7 +1339,7 @@ setInterval (function() {     // Получаем актуальную инфо�
 
 
             
-               
+           
 
 
 
@@ -1198,7 +1380,19 @@ setInterval (function() {     // Получаем актуальную инфо�
   
          });
 
+
+$("#favorites").click(function()
+
+{
+
+if ($("#select").val()=='iknow.dashboard.first') 
 localStorage.current_data_type_1 = JSON.stringify(current_data_type); // Заносим в localStorage необходимую информацию для страницы 'Избранное'
+if ($("#select").val()=='iknow.dashboard.second')
+localStorage.current_data_type_2 = JSON.stringify(current_data_type);
+
+
+})
+
      });
 
 
