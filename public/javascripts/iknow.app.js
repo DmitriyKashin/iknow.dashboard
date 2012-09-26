@@ -4,6 +4,7 @@ $(document).ready(function(){
 
 
         var expected_data;
+        var current_data_type_test = []
         var growth_data   =[]
         var current_data = []   // Данные для динамики событий
         var change_data = []    // Изменения для динамики событий
@@ -1128,6 +1129,7 @@ $("#show_graph").click(function()                 // Рисуем графики
 
 {
 
+current_data_type=current_data_type_test;
 
 $(".drogable").remove();
 
@@ -1367,7 +1369,7 @@ setInterval (function() {     // Получаем актуальную инфо�
                                 });
 
 
-                     current_data_type=data_type;
+                     current_data_type_test=data_type;
 
                      
                      data_type=[];

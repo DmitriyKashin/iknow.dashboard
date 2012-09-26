@@ -18,7 +18,8 @@ app.get "/", routes.index
 app.get "/firstpage", routes.firstpage 
 app.get "/secondpage", routes.secondpage
 app.get "/description", routes.description
-mongoose = require 'mongoose'
+app.get "/favorits", routes.favorits
+mongoose = require 'mongoose' 
 scheme = require './data/dataBase'
 eventType = require './data/eventTrackerType'
 summW = require './data/weekEvents'
@@ -369,15 +370,14 @@ growth =
   pins  :0
   
   plans :0
-  users :0
+  users :0 
 #----------------------------------------------------------------Массив из 67 изменений часов и минут ([0..6] часы, [7-66] минуты)
 app.get "/dataset", (req, res) ->
         
     if req.params.value is 'trouble'
       console.log 'oshibka'
       res.send null
-    else  
-      console.log predict.pin.show.length   
+    else     
       res.send
          graph_data : first_metric
          change_data: change
@@ -643,7 +643,7 @@ calcCoeff = (set, setH) ->
         else
           summ_y = 0
           for el_arr in event_object
-            summ_y += el_arr
+            summ_y += el_arr  
           det = (summ_x_2*len)-(summ_x*summ_x)
           (a0[prop])[event_type] = (((summ_x_2*summ_y)+(summ_x*summ_x*summ_y))/det)
           (a1[prop])[event_type] = (((summ_x*summ_y)+(len*summ_x*summ_y))/det)  
@@ -1072,7 +1072,17 @@ setInterval (->
   getEventsGraph()
   regressStart()
   regressFinish()
+
 ), 10000
+
+
+
+
+setInterval (->
+  findTotalAndLast()
+  getEventsColumn()
+), 3600000
+
 
 
 
