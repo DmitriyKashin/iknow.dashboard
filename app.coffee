@@ -377,7 +377,8 @@ app.get "/dataset", (req, res) ->
     if req.params.value is 'trouble'
       console.log 'oshibka'
       res.send null
-    else     
+    else  
+      console.log first_metric
       res.send
          graph_data : first_metric
          change_data: change
@@ -651,30 +652,30 @@ regressStart = () ->
   findLast = events.find({"aggr":"minute"}).sort({$natural:-1}).skip(60).limit(180)
   findLastH = events.find({"aggr":"hour"}).sort({$natural:-1}).skip(7).limit(21)
   findLast.execFind (err, res) ->
-    poliSet.DateTime = []
-    poliSet.pin.show = []
-    poliSet.pin.repin = []
-    poliSet.pin.update = []
+    poliSet.DateTime = [] 
+    poliSet.pin.show = []  
+    poliSet.pin.repin = []    
+    poliSet.pin.update = []    
     poliSet.pin.list.popular = []
-    poliSet.pin.list.new = []
+    poliSet.pin.list.new = [] 
     poliSet.pin.list.contest = []
     poliSet.pin.list.friends = []
     poliSet.pin.list.userpins = []
     poliSet.pin.list.userlikes = []
     poliSet.pin.create = [] 
     poliSet.pin.delete = [] 
-    poliSet.pin.like = [] 
+    poliSet.pin.like = []  
     poliSet.pin.unlike = [] 
     poliSet.pin.comment = []
     poliSet.plan.show = []
     poliSet.plan.create = []
-    poliSet.plan.update = []
+    poliSet.plan.update = [] 
     poliSet.plan.delete = []
     poliSet.plan.follow = []
     poliSet.plan.unfollow = []
     poliSet.user.show = []
     poliSet.user.showPlans = []
-    poliSet.user.showLikes = [] 
+    poliSet.user.showLikes = []  
     poliSet.user.showPlaces = []  
     poliSet.user.showEvents = []
     poliSet.user.showNotes = []

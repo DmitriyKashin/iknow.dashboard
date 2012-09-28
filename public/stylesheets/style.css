@@ -53,4 +53,79 @@ h1 {
 	border:1px solid #00B7FF;
 	
 }
+#ui-tabs-1
+{
+    min-height:600px;
+	height:auto;
+}
+#ui-tabas-1 canvas 
+{
+	max-width: 1000px; 
+	min-width:700px;
+	min-height:350px;
+}
+#ui-tabas-2 canvas 
+{
+	max-width: 1000px; 
+	min-width:700px;
+	min-height:350px;
+}
 
+#ui-tabs-2
+{
+    min-height:600px;
+	height:auto;
+}
+#ui-tabs-3
+{
+    min-height:600px;
+	height:auto;
+}
+#ui-tabs-4
+{
+    min-height:600px;
+	height:auto;
+}
+.removable 
+{
+	width:1000px;
+	 height:400px;
+	  margin-top:-100px;
+	   margin-left:40%; 
+	    min-width:800px; 
+	    min-height:350px;
+	    border:3px solid white; 
+	    width:1000px; 
+	    height:380px; 
+	     padding-top:10px; 
+	     padding-left:10px;
+}
+.switcher {
+	color:white;
+	font-size: 10px;
+	 height:25px;
+	 width:200px;
+	 margin-left:100px;
+}
+.changer {
+	color:white;
+
+	height:25px;
+	width:200px;
+	margin-left:20%;
+}
+.radio {
+	 font-size:10px; 
+	 margin-top:-25px; 
+	 width:200px; 
+	 margin-left:60%;
+}
+#param {
+	margin-top:-70px;
+	width:800px;
+	 height:70px; 
+	  padding-top:30px;
+	   padding-left:20px;
+	   position:absolute;
+	    color:white;
+}
