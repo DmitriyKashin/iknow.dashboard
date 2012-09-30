@@ -19,6 +19,7 @@ app.get "/firstpage", routes.firstpage
 app.get "/secondpage", routes.secondpage
 app.get "/description", routes.description
 app.get "/favorits", routes.favorits
+app.get "/rose", routes.rose 
 mongoose = require 'mongoose' 
 scheme = require './data/dataBase'
 eventType = require './data/eventTrackerType'
@@ -378,7 +379,7 @@ app.get "/dataset", (req, res) ->
       console.log 'oshibka'
       res.send null
     else  
-      console.log first_metric
+      
       res.send
          graph_data : first_metric
          change_data: change

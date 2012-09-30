@@ -1,7 +1,10 @@
 $(document)
     .ready(function () {
-
-
+    var interval;
+    var rose_count=0;
+    var roses = new Array();
+    var rose_tooltip = [];
+    var rose_colors = [];
     var selector = '';     // Для определения текущей вкладки
     var tree_id;           // Выбор дерева
     var expected_data;     // Ожидаемые значения с сервера
@@ -17,7 +20,6 @@ $(document)
     var bars = new Array(); // Массив объектов для распределения событий
     var tooltip_metric = new Array(); // Подсказки для динамики событий
     var tooltip_count = 0; // Счетчик подсказок
-
     var bar_graph_labels = []; // Лэйблы для отрисовки распределения событий. (Максимум - 5)
     var bar_count = 0; // Счетчик для того, чтобы отрисовать распределения выбранных пользователем событий с рассчетом 5 на 1 график
     var current_code = 'trouble'; // Код ошибки, чтобы сервер не обрабатывал ошибочный запрос. (Отсылается 3 почему-то)
@@ -29,8 +31,8 @@ $(document)
     var bar;
     var fake_count = 0; // fake, fake_count  - Работа с фиктивным точками в дереве событий. (Например, pin.list, user, ...  - не должно учитываться при построении)
 
-
-
+    
+    
 
     $.ajax('/dataset', { // Получаем первый набор данных.
         type: 'GET',
@@ -38,19 +40,13 @@ $(document)
         success: function (data) {
 
             current_data = data.graph_data;
+
             change_data = data.change_data;
             column_data = data.column_data;
             expected_data = data.expected_data;
             growth_data = data.growth_data;
             window.parent.$('#param')
                 .html('<b>Growth (root) : ' + growth_data.roots + '%</b> &nbsp&nbsp&nbsp <b>Growth (average) : ' + growth_data.average + '%</b>&nbsp&nbsp&nbsp<b>Pins: ' + growth_data.pins + '%</b>&nbsp&nbsp&nbsp<b>Plans: ' + growth_data.plans + '%</b>&nbsp&nbsp&nbsp<b>Users: ' + growth_data.users + '%</b>');
-
-
-
-
-
-
-
 
         },
         error: function () {}
@@ -82,7 +78,12 @@ $(document)
     })
 
 
+    $(".hrefs").click(function(){
+        $("#ui-tabs-4").empty();
+        clearInterval(interval);
 
+
+    })
 
     function newLife() { // Функция добавляет ресайз, перенос, и вид кнопки для каждого нового графика.
 
@@ -229,12 +230,14 @@ $(document)
 
 
     {
-
+        
         switch (current_data_type_one) {
 
 
         case 'pin.show':
+            
             first_metric.push(current_data[i].pin.show)
+            
             break
 
         case 'pin.update':
@@ -994,6 +997,98 @@ $(document)
     }
 
 
+function rose_graph() {
+       
+        RGraph.Clear(document.getElementById(rose_canvas));
+        RGraph.ObjectRegistry.Clear(rose_canvas);
+
+
+        first_metric =[];
+        second_metric = [];
+        third_metric =[];
+        rose_colors = [];
+        rose_count++;
+        first_metric = proSwitcher('user.show.places', 7);
+        
+        first_metric = proSwitcher('pin.list.popular', 7);
+        first_metric = proSwitcher('pin.list.contest', 7);
+        first_metric = proSwitcher('user.show.plans', 7);
+        first_metric = proSwitcher('user.show.likes', 7);
+        first_metric = proSwitcher('user.follow', 7);
+        first_metric = proSwitcher('pin.show', 7);
+        first_metric = proSwitcher('user.show.follows', 7);
+        
+        
+
+        second_metric = proSwitcher_2('pin.show', 7);
+        second_metric = proSwitcher_2('pin.list.popular', 7);
+        second_metric = proSwitcher_2('pin.list.contest', 7);
+        second_metric = proSwitcher_2('user.show.plans', 7);
+        second_metric = proSwitcher_2('user.show.likes', 7);
+        second_metric = proSwitcher_2('user.follow', 7);
+        second_metric = proSwitcher_2('user.show.places', 7);
+        second_metric = proSwitcher_2('user.show.follows', 7);
+
+        for (i=0;i<8;i++) {
+
+            if ((first_metric[i]-second_metric[i]) < 0 ) {
+
+            third_metric.push(-first_metric[i]+second_metric[i]);
+            rose_colors[i] = 'red';
+
+
+        }
+
+        else 
+
+            {
+
+            third_metric.push(first_metric[i]-second_metric[i]);
+            rose_colors[i] = 'rgb(0,255,0)';
+
+
+        }
+        rose_tooltip[i] = 'Изменение: ' + (first_metric[i]-second_metric[i]);
+    }
+
+
+
+        
+        
+        
+            roses[rose_count] = new RGraph.Rose('rose_canvas', third_metric);
+            roses[rose_count].Set('chart.colors.alpha', 0.9);
+            roses[rose_count].Set('chart.labels', ['user.show.places','Popular','Contest','user.show.plans','user.show.likes','user.follow','pin.show','user.show.follows']);
+            roses[rose_count].Set('chart.tooltips', rose_tooltip);
+            roses[rose_count].Set('chart.labels.position', 'center');
+            roses[rose_count].Set('chart.labels.axes', '');
+            roses[rose_count].Set('chart.background.grid.spokes', 8);
+            roses[rose_count].Set('chart.background.axes', false);
+            roses[rose_count].Set('chart.colors.sequential', true);
+            roses[rose_count].Set('chart.gutter.top', 2);
+            roses[rose_count].Set('chart.margin', 5);
+            roses[rose_count].Set('chart.text.color', 'white');
+            roses[rose_count].Set('chart.text.size', 10);
+            roses[rose_count].Set('chart.colors', rose_colors);
+            roses[rose_count].Set('chart.background.axes.color', 'orange');
+            
+            
+
+            
+            RGraph.Effects.Rose.RoundRobin(roses[rose_count]);
+
+        }
+
+
+if ($.find('#rose_canvas')[0] != undefined) {
+    
+    setTimeout(function() {
+
+rose_graph();
+interval = setInterval(rose_graph,10000); 
+
+}, 100); }
+
 
     function data_selection(current_data_type_one, graph_numb) // Проверка на часы\минуты, запуск отрисовки, запуск вышестоящего анализатора.
     {
@@ -1339,7 +1434,7 @@ $(document)
                 column_data = data.column_data;
                 expected_data = data.expected_data;
                 growth_data = data.growth_data;
-
+               
 
 
                 if (selector == 'first') { // Обновляем все текущие графики на странице динамики событий.
