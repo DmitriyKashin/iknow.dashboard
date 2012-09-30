@@ -16,10 +16,12 @@ exports.favorits = (req, res) ->
     title: "iknow.dashboard.favorits"
 
 
-exports.description = (req, res) ->
-  res.render "description",
-    title: "iknow.dashboard"
+
 
 exports.rose = (req, res) ->
   res.render "rose",
     title: "iknow.dashboard.rose"
+
+exports.description = (req, res) ->
+  res.render "description",
+    title: "iknow.dashboard"

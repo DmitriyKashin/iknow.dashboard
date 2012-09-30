@@ -5,7 +5,7 @@ app = express()
 app.configure ->
   app.set "port", process.env.PORT or 3000
   app.set "views", __dirname + "/views"
-  app.set "view engine", "jade"
+  app.set "view engine", "jade" 
   app.use express.favicon()
   app.use express.logger("dev")
   app.use express.bodyParser()
@@ -19,7 +19,7 @@ app.get "/firstpage", routes.firstpage
 app.get "/secondpage", routes.secondpage
 app.get "/description", routes.description
 app.get "/favorits", routes.favorits
-app.get "/rose", routes.rose 
+app.get "/rose", routes.rose
 mongoose = require 'mongoose' 
 scheme = require './data/dataBase'
 eventType = require './data/eventTrackerType'
