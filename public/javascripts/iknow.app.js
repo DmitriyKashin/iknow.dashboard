@@ -1017,23 +1017,27 @@ function rose_graph() {
         first_metric = proSwitcher('user.follow', 7);
         first_metric = proSwitcher('pin.show', 7);
         first_metric = proSwitcher('user.show.follows', 7);
+
+        second_metric = first_metric;
+        first_metric = [];
         
         
 
-        second_metric = proSwitcher_2('pin.show', 7);
-        second_metric = proSwitcher_2('pin.list.popular', 7);
-        second_metric = proSwitcher_2('pin.list.contest', 7);
-        second_metric = proSwitcher_2('user.show.plans', 7);
-        second_metric = proSwitcher_2('user.show.likes', 7);
-        second_metric = proSwitcher_2('user.follow', 7);
-        second_metric = proSwitcher_2('user.show.places', 7);
-        second_metric = proSwitcher_2('user.show.follows', 7);
+        first_metric = proSwitcher('user.show.places', 8);
+        
+        first_metric = proSwitcher('pin.list.popular', 8);
+        first_metric = proSwitcher('pin.list.contest', 8);
+        first_metric = proSwitcher('user.show.plans', 8);
+        first_metric = proSwitcher('user.show.likes', 8);
+        first_metric = proSwitcher('user.follow', 8);
+        first_metric = proSwitcher('pin.show', 8);
+        first_metric = proSwitcher('user.show.follows', 8);
 
         for (i=0;i<8;i++) {
 
-            if ((first_metric[i]-second_metric[i]) < 0 ) {
+            if ((-first_metric[i]+second_metric[i]) < 0 ) {
 
-            third_metric.push(-first_metric[i]+second_metric[i]);
+            third_metric.push(+first_metric[i]-second_metric[i]);
             rose_colors[i] = 'red';
 
 
@@ -1043,12 +1047,12 @@ function rose_graph() {
 
             {
 
-            third_metric.push(first_metric[i]-second_metric[i]);
+            third_metric.push(-first_metric[i]+second_metric[i]);
             rose_colors[i] = 'rgb(0,255,0)';
 
 
         }
-        rose_tooltip[i] = 'Изменение: ' + (first_metric[i]-second_metric[i]);
+        rose_tooltip[i] = 'Изменение: ' + (-first_metric[i]+second_metric[i]);
     }
 
 
