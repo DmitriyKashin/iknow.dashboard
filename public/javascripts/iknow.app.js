@@ -1,6 +1,10 @@
 $(document)
     .ready(function () {
     var interval;
+    var fg = 1;
+    var k =0;
+    var col,row,size_x,size_y;
+    var favorites_row = 1;
     var rose_count=0;
     var roses = new Array();
     var rose_tooltip = [];
@@ -40,7 +44,6 @@ $(document)
         success: function (data) {
 
             current_data = data.graph_data;
-
             change_data = data.change_data;
             column_data = data.column_data;
             expected_data = data.expected_data;
@@ -80,7 +83,16 @@ $(document)
 
     $(".hrefs").click(function(){
         $("#ui-tabs-4").empty();
+        $("#ui-tabs-3").empty();
+        $("#ui-tabs-1").empty();
+        $("#ui-tabs-2").empty();
+        if ($(".ui-tabs-selected a").text()!='Избранное') {
+           
+            
+     }
+        
         clearInterval(interval);
+        clearInterval(get_data);
 
     })
 
@@ -102,9 +114,9 @@ $(document)
 
         RGraph.Clear(document.getElementById(graph_id));
         RGraph.ObjectRegistry.Clear(graph_id);
+       
 
-
-        if (selector == 'first') // Если мы находимся на странице динамики событий
+        if ((selector == 'first') || ($(".ui-tabs-selected a").text()=="Избранное")) // Если мы находимся на странице динамики событий
 
         {
 
@@ -114,7 +126,7 @@ $(document)
             lines[graph_id] = new RGraph.Line(graph_id, first_metric, second_metric);
             tooltip_count++;
             tooltip_metric[tooltip_count] = new Array();
-
+              
             // Генерируем подсказки
 
             for (i = 0; i < first_metric.length; i++) {
@@ -184,7 +196,7 @@ $(document)
 
             };
 
-
+            
             lines[graph_id].Draw();
 
 
@@ -344,19 +356,12 @@ function data_selection(current_data_type_one, graph_numb) // Проверка �
 
             for (i = 6; i > -1; i--) {
 
-                if (current_data[i].aggr == 'hour')
-
-
-                {
-
 
                     first_metric = proSwitcher(current_data_type_one, i, first_metric, current_data);
                     second_metric = proSwitcher_2(current_data_type_one, i, second_metric, change_data);
                     third_metric = proSwitcher_4(current_data_type_one, i, third_metric, expected_data);
-
-
-
-                }
+                   
+                
             }
 
 
@@ -380,17 +385,15 @@ function data_selection(current_data_type_one, graph_numb) // Проверка �
 
                     {
 
-                        if (current_data[i].aggr == 'minute') 
-
-                        {
-
+                       
 
                             first_metric = proSwitcher(current_data_type_one, i, first_metric, current_data);
                             second_metric = proSwitcher_2(current_data_type_one, i, second_metric, change_data);
                             third_metric = proSwitcher_4(current_data_type_one, i, third_metric, expected_data);
 
 
-                        }
+
+                        
                     }
 
                 if ($("#changes_remove-" + graph_numb + " span").text() == 'remove changes')
@@ -444,137 +447,68 @@ function data_selection(current_data_type_one, graph_numb) // Проверка �
 
 
 
+  var dynamic_graph = function(type) {
+
+           
+            $(".save_param").click(function(){
+               
+                localStorage.config = JSON.stringify(gridster.serialize());
+
+            });
+
+            config = localStorage.config ? JSON.parse(localStorage.config) : [];
 
 
-
-
-
-    $(".show_graph")
-        .click(function () // Рисуем графики по нажатию на кнопку. Удаляем все предыдущие. Проверяем на лже-графики (pin, list..)
-
-
-    {
-
-        current_data_type = current_data_type_test;  
-
-        $(".removable").remove();
-            
-
-        var fg = 1; // Для обозначения первого отрисованного графика. Его свойства немного отличаются. ( отступ сверху, например, другой)
-
-        // Если мы на странице динамики :
-
-        if ($(this)
-            .parent()
-            .attr('id') == 'ui-tabs-1') {
-
-            selector = 'first';
 
 
             for (j = 0; j < current_data_type.length; j++) {
 
-
+                if (config[j]==undefined) { col = null; row = null; size_x = 5; size_y = 3;} else { col = config[j].col; row = config[j].row; size_x = config[j].size_x; size_y = config[j].size_y;}
+                
+            
+               
+        
                 if ((current_data_type[j] != 'pin.list') && (current_data_type[j] != 'user') && (current_data_type[j] != 'pin') && (current_data_type[j] != 'plan') && (current_data_type[j] != 'user.show')) {
 
+                if ($(".ui-tabs-selected a").text()=="Динамика числа событий") {
                     if (fg == 1) $("#ui-tabs-1")
                         .append('<div class="removable" id="graph_div-' + j + '"><b style="color:white; ">' + current_data_type[j] + '</b><button style="font-size: 10px;" id="graph_switcher-' + j + '" class="switcher">show last 60 minutes</button><button style="font-size: 10px; " class = "changer" id="changes_remove-' + j + '">remove changes</button><canvas id="' + j + '" width="1000" height="350" no="" canvas="" support=""></canvas></div> ');
                     else $("#ui-tabs-1")
-                        .append('<div class="removable" id="graph_div-' + j + '" style="margin-top:50px;"><b style="color:white; ">' + current_data_type[j] + '</b><button  style ="font-size: 10px;" id="graph_switcher-' + j + '" class="switcher">show last 60 minutes</button><button style="font-size: 10px;" class = "changer" id="changes_remove-' + j + '">remove changes</button><canvas id="' + j + '" width="1000" height="350" no="" canvas="" support=""></canvas></div> ');
-
-                    count = j;
+                        .append('<div class="removable" id="graph_div-' + j + '" style="margin-top:50px;"><b style="color:white; ">' + current_data_type[j] + '</b><button  style ="font-size: 10px;" id="graph_switcher-' + j + '" class="switcher">show last 60 minutes</button><button style="font-size: 10px;" class = "changer" id="changes_remove-' + j + '">remove changes</button><canvas id="' + j + '" width="1000" height="350" no="" canvas=""  support=""></canvas></div> ');
+                 
                     fg = 0;
+                }
+
+                    if ($(".ui-tabs-selected a").text()=="Избранное") {
+                    
+                
+                    
+                    gridster.add_widget('<li class = "new"><b style="color:white; ">' + current_data_type[j] + '</b> <button style="font-size: 10px;" id="graph_switcher-' + j + '" class="switcher">show last 60 minutes</button><button style="font-size: 10px; " class = "changer" id="changes_remove-' + j + '">remove changes</button> <button style="font-size:10px;" class="resizer" id="graph_resize_2_'+j+'"">Resize_2</button><button style="font-size:10px;" class="resizer" id="graph_resize_3_'+j+'"">Resize_3</button><button style="font-size:10px;" class="resizer" id="graph_resize_1_'+j+'"">Resize_1</button><canvas id="' + j + '" width="800" height="420" no="" canvas="" support=""></canvas></li>', size_x, size_y, col, row);
+
+                }
+               
+                    count = j;
                     $("button")
                         .button();
                     data_selection(current_data_type[j], count);
                     j = count;
                 }
+                if ($(".ui-tabs-selected a").text()=="Избранное") {
+                if (size_x==6) {
+                
+                $("#"+j).attr('width', 950);
+                $("#"+j).attr('height', 600);
+            }
+                if (size_x==13) {
+                
+                $("#"+j).attr('width', 1900);
+                $("#"+j).attr('height', 600);
             }
         }
-
-        // Если на странице распределений
-
-        if ($(this)
-            .parent()
-            .attr('id') == 'ui-tabs-2') {
-            selector = 'second';
-
-            bar_graph = [];
-            bar_graph_labels = []; // Зануляем предыдущие 5 точек и лэйблы для них
-            bar_count = 0;
-            temp_id = 0;
-            fake = 0; // Fake - "Чистый" счетчик, который отбрасывает фиктивные точки, в отличие от j.
-            fake_count = 0;
-
-
-            for (j = 0; j < (current_data_type.length); j++) {
-
-                // Проверяем точки в дереве на фиктивность
-
-                if ((current_data_type[j] != 'pin.list') && (current_data_type[j] != 'user') && (current_data_type[j] != 'pin') && (current_data_type[j] != 'plan') && (current_data_type[j] != 'user.show')) {
-
-                    //Первый график
-                    if (fake == 0) {
-                        $("#ui-tabs-2")
-                            .append('<div class="removable" id="graph_div-' + fake + '" > <div id="radio' + fake + '" class ="radio"><input type="radio" id="radio_1' + fake + '"   name="radio' + fake + '" /><label for="radio_1' + fake + '">Last Week</label><input type="radio" id="radio_2' + fake + '" checked="checked" name="radio' + fake + '" /><label for="radio_2' + fake + '">Last Day</label></div><canvas id="' + fake + '" width="1000" height="350" no="" canvas="" support=""></canvas></div> ');
-                        temp_id = 0;
-                    } else
-                    // Если пора рисовать новый график из 5 элементов - мы это делаем.
-                    if ((fake == 5) || (fake == 10) || (fake == 15) || (fake == 20) || (fake == 25) || (fake == 30)) {
-                        $("#ui-tabs-2")
-                            .append('<div class="removable" id="graph_div-' + fake + '" style="margin-top:50px;"" > <div id="radio' + fake + '" class ="radio"><input type="radio" id="radio_1' + fake + '"   name="radio' + fake + '" /><label for="radio_1' + fake + '">Last Week</label><input type="radio" id="radio_2' + fake + '" checked="checked" name="radio' + fake + '" /><label for="radio_2' + fake + '">Last Day</label></div><canvas id="' + fake + '" width="1000"  height="350" no="" canvas="" support=""></canvas></div>');
-                        temp_id = fake;
-                    }
-                    count = j;
-                    $("button")
-                        .button();
-                    data_selection_bar(current_data_type[j], temp_id);
-                    fake++;
-                    j = count;
-                } else fake_count++; // Fake_count - количество фиктивных точек в выбранном дереве событий. Используется в data_selection_bar для четкого перехода к новому графику.
-
-            }
+                 lines[j].Draw();
         }
 
 
-
-        $(".radio")
-            .buttonset(); // Отрисовка всех добавленных элементов на основе jQuery UI
-
-
-        $(".radio input")
-            .click(function () { // Меняем день на неделю и обратно у выбранного графика на странице распределения событий
-
-            bar_graph = [];
-            bar_graph_labels = [];
-
-            var change_id = parseInt($(this)
-                .attr('id')[7] + $(this)
-                .attr('id')[8]);
-
-            bar_graph_labels = bars[change_id].Get('chart.labels');
-
-            if ($(this)
-                .attr('id')[6] == '1') {
-
-                for (i = 0; i < bar_graph_labels.length; i++) {
-                    bar_graph = proSwitcher_3(bar_graph_labels[i], 'week', bar_graph, column_data);
-                }
-
-            } else {
-
-                for (i = 0; i < bar_graph_labels.length; i++) {
-                    bar_graph = proSwitcher_3(bar_graph_labels[i], 'day', bar_graph, column_data);
-                }
-            }
-
-
-
-            drawing(bar_graph, null, null, 'bar', change_id);
-
-
-
-
-        })
 
         $(".switcher span")
             .click(function () { // Отрисовываем график заного при переключении на часы\минуты
@@ -620,6 +554,37 @@ function data_selection(current_data_type_one, graph_numb) // Проверка �
 
 
         });
+            $(".resizer span")
+                .click(function(){
+
+                    
+                    graph_numb = parseInt($(this).parent().attr('id')[15]);
+                    canvas_element = $("#"+graph_numb);
+                    if (parseInt($(this).parent().attr('id')[13])==1)
+                    {
+                    gridster.resize_widget($(this).closest('li'), 6, 4);                  
+                    canvas_element.attr('width','950');
+                    canvas_element.attr('height','600');
+                    }
+                    if (parseInt($(this).parent().attr('id')[13])==2)
+                    { 
+                    gridster.resize_widget($(this).closest('li'), 13, 4);                 
+                    canvas_element.attr('width','1900');
+                    canvas_element.attr('height','600');
+                    }   
+                    if (parseInt($(this).parent().attr('id')[13])==3)
+                    {
+                    gridster.resize_widget($(this).closest('li'), 6, 4);                  
+                    canvas_element.attr('width','950');
+                    canvas_element.attr('height','600');
+                    }   
+
+                    lines[graph_numb].Draw();
+
+
+                  
+
+                })
 
         $(".changer span")
             .click(function () { // Убераем изменения или добавляем их на выбранные график на странице динамики событий.
@@ -657,14 +622,151 @@ function data_selection(current_data_type_one, graph_numb) // Проверка �
 
 
         });
+            
+           
 
+            
+
+
+        }
+
+
+var events_graph = function(type) {
+            bar_graph = [];
+            bar_graph_labels = []; // Зануляем предыдущие 5 точек и лэйблы для них
+            bar_count = 0;
+            temp_id = 0;
+            fake = 0; // Fake - "Чистый" счетчик, который отбрасывает фиктивные точки, в отличие от j.
+            fake_count = 0;
+
+
+            for (j = 0; j < (current_data_type.length); j++) {
+
+                // Проверяем точки в дереве на фиктивность
+
+                if ((current_data_type[j] != 'pin.list') && (current_data_type[j] != 'user') && (current_data_type[j] != 'pin') && (current_data_type[j] != 'plan') && (current_data_type[j] != 'user.show')) {
+
+                    //Первый график
+                    if (fake == 0) {
+                        $("#ui-tabs-2")
+                            .append('<div class="removable" id="graph_div-' + fake + '" > <div id="radio' + fake + '" class ="radio"><input type="radio" id="radio_1' + fake + '"   name="radio' + fake + '" /><label for="radio_1' + fake + '">Last Week</label><input type="radio" id="radio_2' + fake + '" checked="checked" name="radio' + fake + '" /><label for="radio_2' + fake + '">Last Day</label></div><canvas id="' + fake + '" width="1000" height="350" no="" canvas="" support=""></canvas></div> ');
+                        temp_id = 0;
+                    } else
+                    // Если пора рисовать новый график из 5 элементов - мы это делаем.
+                    if ((fake == 5) || (fake == 10) || (fake == 15) || (fake == 20) || (fake == 25) || (fake == 30)) {
+                        $("#ui-tabs-2")
+                            .append('<div class="removable" id="graph_div-' + fake + '" style="margin-top:50px;"" > <div id="radio' + fake + '" class ="radio"><input type="radio" id="radio_1' + fake + '"   name="radio' + fake + '" /><label for="radio_1' + fake + '">Last Week</label><input type="radio" id="radio_2' + fake + '" checked="checked" name="radio' + fake + '" /><label for="radio_2' + fake + '">Last Day</label></div><canvas id="' + fake + '" width="1000"  height="350" no="" canvas="" support=""></canvas></div>');
+                        temp_id = fake;
+                    }
+                    count = j;
+                    $("button")
+                        .button();
+                    data_selection_bar(current_data_type[j], temp_id);
+                    fake++;
+                    j = count;
+                } else fake_count++; // Fake_count - количество фиктивных точек в выбранном дереве событий. Используется в data_selection_bar для четкого перехода к новому графику.
+
+            }
+
+              $(".radio")
+            .buttonset(); // Отрисовка всех добавленных элементов на основе jQuery UI
+
+
+        $(".radio input")
+            .click(function () { // Меняем день на неделю и обратно у выбранного графика на странице распределения событий
+
+            bar_graph = [];
+            bar_graph_labels = [];
+
+            var change_id = parseInt($(this)
+                .attr('id')[7] + $(this)
+                .attr('id')[8]);
+
+            bar_graph_labels = bars[change_id].Get('chart.labels');
+
+            if ($(this)
+                .attr('id')[6] == '1') {
+
+                for (i = 0; i < bar_graph_labels.length; i++) {
+                    bar_graph = proSwitcher_3(bar_graph_labels[i], 'week', bar_graph, column_data);
+                }
+
+            } else {
+
+                for (i = 0; i < bar_graph_labels.length; i++) {
+                    bar_graph = proSwitcher_3(bar_graph_labels[i], 'day', bar_graph, column_data);
+                }
+            }
+
+
+
+            drawing(bar_graph, null, null, 'bar', change_id);
+
+
+
+
+        })
+
+        }
+
+
+ if ($(".ui-tabs-selected a").text()=="Избранное") {
+
+    selector='first';
+
+    current_data_1 = localStorage.current_data_1 ? JSON.parse(localStorage.current_data_1) : [];
+    current_data_2 = localStorage.current_data_2 ? JSON.parse(localStorage.current_data_2) : [];
+    
+    current_data_type = current_data_1;
+    setTimeout(function(){
+
+        dynamic_graph('favorites');
+    },200);
+
+ }
+
+
+
+    $(".show_graph")
+        .click(function () // Рисуем графики по нажатию на кнопку. Удаляем все предыдущие. Проверяем на лже-графики (pin, list..)
+
+
+    {
+
+        current_data_type = current_data_type_test;  
+
+        $(".removable").remove();
+            
+
+
+        // Если мы на странице динамики :
+
+        if ($(this)
+            .parent()
+            .attr('id') == 'ui-tabs-1') {
+
+            selector = 'first';
+          
+            dynamic_graph('first');
+
+        }
+
+        // Если на странице распределений
+
+        if ($(this)
+            .parent()
+            .attr('id') == 'ui-tabs-2') {
+            selector = 'second';
+            events_graph('second');
+   
+        }
 
 
     });
 
 
 
-    setInterval(function () { // Получаем актуальную информацию каждые 60 сек.
+   var get_data = setInterval(function () { // Получаем актуальную информацию каждые 60 сек.
 
         $.ajax('/dataset', {
             type: 'GET',
@@ -682,6 +784,7 @@ function data_selection(current_data_type_one, graph_numb) // Проверка �
                 if (selector == 'first') { // Обновляем все текущие графики на странице динамики событий.
 
                     for (j = 0; j < count + 1; j++) {
+                       
 
                         data_selection(current_data_type[j], j);
 
@@ -730,11 +833,11 @@ function data_selection(current_data_type_one, graph_numb) // Проверка �
 
                 if ($(this)
                     .is(':checked')) {
-
+                     if ( ($(this) .parent().attr('id') != 'pin.list') && ($(this) .parent().attr('id') != 'user') && ($(this) .parent().attr('id') != 'pin') && ($(this) .parent().attr('id') != 'plan') && ($(this) .parent().attr('id') != 'user.show')) {
                     data_type.push($(this)
                         .parent()
                         .attr('id'));
-
+                    }
 
 
                 }
@@ -757,18 +860,26 @@ function data_selection(current_data_type_one, graph_numb) // Проверка �
     });
 
 
-    $("#favorites")
+
+
+
+
+    $(".favorites")
         .click(function ()
 
     {
+        localStorage.config = [];
+        if ($(".ui-tabs-selected a").text()=="Динамика числа событий")
 
-        if (selector=='first')
-             localStorage.current_data_type_1 = JSON.stringify(current_data_type); // Заносим в localStorage необходимую информацию для страницы 'Избранное'
-        if (selector=='second')
-             localStorage.current_data_type_2 = JSON.stringify(current_data_type);
+             localStorage.current_data_1 = JSON.stringify(current_data_type_test);
+             
+        if ($(".ui-tabs-selected a").text()=="Распределение событий")
+            
+             localStorage.current_data_2 = JSON.stringify(current_data_type_test);
+         
 
 
-    })
+    });
 
 });
 
