@@ -132,14 +132,29 @@ h1 {
 	 margin-left:60%;
 }
 #param {
-	margin-top:-70px;
-	width:800px;
-	 height:70px; 
-	  padding-top:30px;
-	   padding-left:20px;
-	   position:absolute;
-	    color:white;
+	left:900px;
+	top:105px;
+	width:1000px;
+	height:120px; 
+
+	padding-top:30px;
+	
+	position:absolute;
+	color:rgb(0,255,0);
 }
+#param img {
+margin-left:60px;
+}
+
+#param b {
+position:absolute;
+margin-top:15px;
+margin-left:5px;
+
+}
+
+
+
 #rose {
 
 	width:1200px;

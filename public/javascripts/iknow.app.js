@@ -1,8 +1,10 @@
 $(document)
     .ready(function () {
     var interval;
-    var fg = 1;
+    var fg = 0;
     var k =0;
+    var favorites_check_dynamic=0;
+    var favorites_check = 0;
     var col,row,size_x,size_y;
     var favorites_row = 1;
     var rose_count=0;
@@ -49,7 +51,7 @@ $(document)
             expected_data = data.expected_data;
             growth_data = data.growth_data;
             window.parent.$('#param')
-                .html('<b>Growth (root) : ' + growth_data.roots + '%</b> &nbsp&nbsp&nbsp <b>Growth (average) : ' + growth_data.average + '%</b>&nbsp&nbsp&nbsp<b>Pins: ' + growth_data.pins + '%</b>&nbsp&nbsp&nbsp<b>Plans: ' + growth_data.plans + '%</b>&nbsp&nbsp&nbsp<b>Users: ' + growth_data.users + '%</b>');
+                .html('<img src="../images/root.png" width="100" height="40"></img> <b>' + growth_data.roots + '%</b> &nbsp&nbsp&nbsp<img src="../images/13058eeb.gif" width="100" height="40"></img> <b>' + growth_data.average + '%</b>&nbsp&nbsp&nbsp<img src="../images/pin.png" width="50" height="40"></img><b> ' + growth_data.pins + '%</b>&nbsp&nbsp&nbsp<img src="../images/board.jpg" width="105" height="40"></img><b>' + growth_data.plans + '%</b>&nbsp&nbsp&nbsp<img src="../images/user.png" width="55" height="40"></img><b>' + growth_data.users + '%</b>');
 
         },
         error: function () {}
@@ -113,13 +115,14 @@ $(document)
 
 
         RGraph.Clear(document.getElementById(graph_id));
-        RGraph.ObjectRegistry.Clear(graph_id);
-       
-
-        if ((selector == 'first') || ($(".ui-tabs-selected a").text()=="Избранное")) // Если мы находимся на странице динамики событий
+        
+        if (graph_id!=0) RGraph.ObjectRegistry.Clear(graph_id); else  RGraph.ObjectRegistry.Clear('0');
+        
+  
+        if ((selector == 'first') || (favorites_check_dynamic==1)) // Если мы находимся на странице динамики событий
 
         {
-
+              
 
             // Добавляем в массив линий новую, соответствующую входным параметрам
 
@@ -134,9 +137,6 @@ $(document)
                     .toString() + '</b><br><b style="color:blue;"> Ожидаемое: ' + third_metric[i] + '</b>';
                 else tooltip_metric[tooltip_count][i] = '<b style="color:green;"> Реальное: ' + first_metric[i].toString() + '</b><br><b style="color:blue;"> Ожидаемое: ' + third_metric[i] + '</b>';
             }
-
-
-
 
 
 
@@ -202,13 +202,14 @@ $(document)
 
         }
 
+  
+        if ((selector == 'second') || (favorites_check == 1))// Если находимся на странице распределения событий
 
-        if (selector == 'second') // Если находимся на странице распределения событий
+        {   
 
-        {
 
             // Новый объект столбчатой диаграммы. 
-
+           
             bars[graph_id] = new RGraph.Bar(graph_id, first_metric);
             bars[graph_id].Set('chart.labels', bar_graph_labels);
             bars[graph_id].Set('chart.background.grid.autofit', true);
@@ -415,14 +416,16 @@ function data_selection(current_data_type_one, graph_numb) // Проверка �
     function data_selection_bar(current_data_type_one, graph_numb) // Здесь готовим данные по 5 единиц для создания графиков на странице распределения событий.
 
     {
+         
 
         bar_count++;
         bar_graph = proSwitcher_3(current_data_type_one, 'day', bar_graph, column_data);
         bar_graph_labels.push(current_data_type_one.toString());
-
+       
         if ((bar_count == 5) || (bar_count == 10) || (bar_count == 15) || (bar_count == 20) || (bar_count == 25) || (bar_count == 30))
 
         {
+            
 
             drawing(bar_graph, null, null, 'bar', graph_numb);
             bar_graph = [];
@@ -448,6 +451,7 @@ function data_selection(current_data_type_one, graph_numb) // Проверка �
 
 
   var dynamic_graph = function(type) {
+    favorites_check_dynamic = 0;
 
            
             $(".save_param").click(function(){
@@ -481,8 +485,8 @@ function data_selection(current_data_type_one, graph_numb) // Проверка �
 
                     if ($(".ui-tabs-selected a").text()=="Избранное") {
                     
-                
-                    
+                    favorites_check_dynamic=1;
+                  
                     gridster.add_widget('<li class = "new"><b style="color:white; ">' + current_data_type[j] + '</b> <button style="font-size: 10px;" id="graph_switcher-' + j + '" class="switcher">show last 60 minutes</button><button style="font-size: 10px; " class = "changer" id="changes_remove-' + j + '">remove changes</button> <button style="font-size:10px;" class="resizer" id="graph_resize_2_'+j+'"">Resize_2</button><button style="font-size:10px;" class="resizer" id="graph_resize_3_'+j+'"">Resize_3</button><button style="font-size:10px;" class="resizer" id="graph_resize_1_'+j+'"">Resize_1</button><canvas id="' + j + '" width="800" height="420" no="" canvas="" support=""></canvas></li>', size_x, size_y, col, row);
 
                 }
@@ -514,6 +518,14 @@ function data_selection(current_data_type_one, graph_numb) // Проверка �
             .click(function () { // Отрисовываем график заного при переключении на часы\минуты
 
 
+            
+            if ($(".ui-tabs-selected a").text()=="Избранное") { 
+
+            current_data_type = current_data_1;
+            selector='first';
+            favorites_check = 0;
+            favorites_check_dynamic = 1;
+             }
 
             if ($(this)
                 .text() == 'show last 60 minutes') {
@@ -574,9 +586,9 @@ function data_selection(current_data_type_one, graph_numb) // Проверка �
                     }   
                     if (parseInt($(this).parent().attr('id')[13])==3)
                     {
-                    gridster.resize_widget($(this).closest('li'), 6, 4);                  
-                    canvas_element.attr('width','950');
-                    canvas_element.attr('height','600');
+                    gridster.resize_widget($(this).closest('li'), 5, 3);                  
+                    canvas_element.attr('width','800');
+                    canvas_element.attr('height','420');
                     }   
 
                     lines[graph_numb].Draw();
@@ -588,7 +600,12 @@ function data_selection(current_data_type_one, graph_numb) // Проверка �
 
         $(".changer span")
             .click(function () { // Убераем изменения или добавляем их на выбранные график на странице динамики событий.
-
+           if ($(".ui-tabs-selected a").text()=="Избранное") {
+            selector = 'first';
+            favorites_check_dynamic = 1;
+            current_data_type = current_data_1;
+            favorites_check=0;
+        }
 
             if ($(this)
                 .text() == 'remove changes') {
@@ -638,33 +655,63 @@ var events_graph = function(type) {
             temp_id = 0;
             fake = 0; // Fake - "Чистый" счетчик, который отбрасывает фиктивные точки, в отличие от j.
             fake_count = 0;
-
-
+            favorites_check=0;
+            favorites_check_dynamic = 0;
+            selector = 'second';
+            var bar_graph_count = 0;
+            
+          
             for (j = 0; j < (current_data_type.length); j++) {
+            
+              if (config[bar_graph_count+current_data_1.length]==undefined) { col = null; row = null; size_x = 5; size_y = 3;} else {  col = config[bar_graph_count+current_data_1.length].col; row = config[bar_graph_count+current_data_1.length].row; size_x = config[bar_graph_count+current_data_1.length].size_x; size_y = config[bar_graph_count+current_data_1.length].size_y;}
 
-                // Проверяем точки в дереве на фиктивность
-
-                if ((current_data_type[j] != 'pin.list') && (current_data_type[j] != 'user') && (current_data_type[j] != 'pin') && (current_data_type[j] != 'plan') && (current_data_type[j] != 'user.show')) {
-
+                    if ($(".ui-tabs-selected a").text()=="Распределение событий") {
+                        
                     //Первый график
                     if (fake == 0) {
                         $("#ui-tabs-2")
                             .append('<div class="removable" id="graph_div-' + fake + '" > <div id="radio' + fake + '" class ="radio"><input type="radio" id="radio_1' + fake + '"   name="radio' + fake + '" /><label for="radio_1' + fake + '">Last Week</label><input type="radio" id="radio_2' + fake + '" checked="checked" name="radio' + fake + '" /><label for="radio_2' + fake + '">Last Day</label></div><canvas id="' + fake + '" width="1000" height="350" no="" canvas="" support=""></canvas></div> ');
                         temp_id = 0;
+                        
                     } else
                     // Если пора рисовать новый график из 5 элементов - мы это делаем.
                     if ((fake == 5) || (fake == 10) || (fake == 15) || (fake == 20) || (fake == 25) || (fake == 30)) {
                         $("#ui-tabs-2")
                             .append('<div class="removable" id="graph_div-' + fake + '" style="margin-top:50px;"" > <div id="radio' + fake + '" class ="radio"><input type="radio" id="radio_1' + fake + '"   name="radio' + fake + '" /><label for="radio_1' + fake + '">Last Week</label><input type="radio" id="radio_2' + fake + '" checked="checked" name="radio' + fake + '" /><label for="radio_2' + fake + '">Last Day</label></div><canvas id="' + fake + '" width="1000"  height="350" no="" canvas="" support=""></canvas></div>');
                         temp_id = fake;
+                        
                     }
-                    count = j;
+                }
+
+                    if ($(".ui-tabs-selected a").text()=="Избранное") {
+                        favorites_check = 1;
+
+                     if (fake == 0) {
+                                       
+                    gridster.add_widget('<li class = "new"> <div id="radio' + (fake+35) + '" class ="radio"><input type="radio" id="radio_1' + (fake+35) + '"   name="radio' + (fake+35) + '" /><label for="radio_1' + (fake+35) + '">Last Week</label><input type="radio" id="radio_2' + (fake+35) + '" checked="checked" name="radio' + (fake+35) + '" /><label for="radio_2' + (fake+35)+ '">Last Day</label></div> <canvas id="' + (fake+35) + '" width="800" height="420" no="" canvas="" support=""></canvas></li>', size_x, size_y, col, row);
+                   
+                    temp_id = fake+35;
+                    bar_graph_count++;
+                }
+                    else 
+
+                    
+                    if (( (fake+35) == 40) || ((fake+35) == 45) || ((fake+35) == 50) || ((fake+35) == 55) || ((fake+35) == 60) || ((fake+35) == 65)) {
+                                       
+                    gridster.add_widget('<li class = "new"> <div id="radio' + (fake+35) + '" class ="radio"><input type="radio" id="radio_1' + (fake+35) + '"   name="radio' + (fake+35) + '" /><label for="radio_1' + (fake+35) + '">Last Week</label><input type="radio" id="radio_2' + (fake+35) + '" checked="checked" name="radio' + (fake+35) + '" /><label for="radio_2' + (fake+35)+ '">Last Day</label></div> <canvas id="' + (fake+35) + '" width="800" height="420" no="" canvas="" support=""></canvas></li>', size_x, size_y, col, row);
+                   
+                    temp_id = fake+35;
+                    bar_graph_count++;
+                }
+            }
+
                     $("button")
                         .button();
                     data_selection_bar(current_data_type[j], temp_id);
                     fake++;
-                    j = count;
-                } else fake_count++; // Fake_count - количество фиктивных точек в выбранном дереве событий. Используется в data_selection_bar для четкого перехода к новому графику.
+                   
+                    
+                   // Fake_count - количество фиктивных точек в выбранном дереве событий. Используется в data_selection_bar для четкого перехода к новому графику.
 
             }
 
@@ -677,7 +724,10 @@ var events_graph = function(type) {
 
             bar_graph = [];
             bar_graph_labels = [];
-
+            selector = 'second';
+            favorites_check = 1;
+            favorites_check_dynamic = 0;
+            current_data_type = current_data_2;
             var change_id = parseInt($(this)
                 .attr('id')[7] + $(this)
                 .attr('id')[8]);
@@ -716,12 +766,24 @@ var events_graph = function(type) {
 
     current_data_1 = localStorage.current_data_1 ? JSON.parse(localStorage.current_data_1) : [];
     current_data_2 = localStorage.current_data_2 ? JSON.parse(localStorage.current_data_2) : [];
-    
-    current_data_type = current_data_1;
-    setTimeout(function(){
 
+    
+    
+   
+    setTimeout(function(){
+        current_data_type = current_data_1;
         dynamic_graph('favorites');
+
     },200);
+
+    
+    setTimeout(function(){
+        current_data_type = current_data_2;
+
+        events_graph('favorites');
+        
+    },600);
+
 
  }
 

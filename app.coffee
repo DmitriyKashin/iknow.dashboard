@@ -379,7 +379,7 @@ app.get "/dataset", (req, res) ->
       console.log 'oshibka'
       res.send null
     else  
-      
+        
       res.send
          graph_data : first_metric
          change_data: change
