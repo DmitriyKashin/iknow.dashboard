@@ -580,8 +580,8 @@ function data_selection(current_data_type_one, graph_numb) // Проверка �
                     }
                     if (parseInt($(this).parent().attr('id')[13])==2)
                     { 
-                    gridster.resize_widget($(this).closest('li'), 13, 4);                 
-                    canvas_element.attr('width','1900');
+                    gridster.resize_widget($(this).closest('li'), 8, 4);                 
+                    canvas_element.attr('width','1300');
                     canvas_element.attr('height','600');
                     }   
                     if (parseInt($(this).parent().attr('id')[13])==3)
