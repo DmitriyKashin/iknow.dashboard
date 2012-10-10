@@ -1,7 +1,7 @@
 #Init
 mongoose = require 'mongoose'
 Schema = mongoose.Schema
-#Event Storage (temp)
+#Event Storage (temp) Резервное хранилище всех событий iknow.travel
 eventStorage = new Schema
 	DateTime	:type	:Date, required	:yes
 	eKey	:
@@ -15,7 +15,7 @@ eventStorage = new Schema
 		#plan	:type	:String, required	:no
 		#extra	:type	:String, required	:yes
 
-#Event Tracker
+#Event Tracker Рабочее хранилище количественных характеристик 
 eventTracker = new Schema 
 	DateTime 	:type	:Date, default:	Date.now
 	aggr	:type	:String, enum	:['minute', 'hour', 'day', 'month', 'year', 'total'], default	:'minute'
@@ -61,6 +61,11 @@ eventTracker = new Schema
 			email	:type	:Number, default: 0
 
 
+
+mongo = mongoose.createConnection 'mongodb://194.58.155.187/dev'
+eveTrack = mongo.model 'event', eventTracker
+eveStore = mongo.model 'storage', eventStorage
+
 #Exporting everything
-exports.eventTracker = eventTracker
-exports.eventStorage = eventStorage
+exports.eveTrack = eveTrack
+exports.eveStore = eveStore
