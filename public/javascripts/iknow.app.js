@@ -658,13 +658,14 @@ var events_graph = function(type) {
             favorites_check=0;
             favorites_check_dynamic = 0;
             selector = 'second';
+
             var bar_graph_count = 0;
             
           
             for (j = 0; j < (current_data_type.length); j++) {
-            
+              if ($(".ui-tabs-selected a").text()=="Избранное") {
               if (config[bar_graph_count+current_data_1.length]==undefined) { col = null; row = null; size_x = 5; size_y = 3;} else {  col = config[bar_graph_count+current_data_1.length].col; row = config[bar_graph_count+current_data_1.length].row; size_x = config[bar_graph_count+current_data_1.length].size_x; size_y = config[bar_graph_count+current_data_1.length].size_y;}
-
+                }
                     if ($(".ui-tabs-selected a").text()=="Распределение событий") {
                         
                     //Первый график
@@ -793,7 +794,8 @@ var events_graph = function(type) {
         .click(function () // Рисуем графики по нажатию на кнопку. Удаляем все предыдущие. Проверяем на лже-графики (pin, list..)
 
 
-    {
+    {   
+
 
         current_data_type = current_data_type_test;  
 
@@ -818,6 +820,7 @@ var events_graph = function(type) {
         if ($(this)
             .parent()
             .attr('id') == 'ui-tabs-2') {
+           
             selector = 'second';
             events_graph('second');
    

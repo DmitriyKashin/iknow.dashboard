@@ -71,7 +71,7 @@ getDataForColumn = () ->
     column.week = for_column.outWeek
 #-----------------------------------------------------------------------------Функции для ожидаемого
 for_predict = null
-tmp = null
+tmp = null 
 coeffs = null
 getDataForPredict = () ->
   predict_file.getInitData (callback) ->
