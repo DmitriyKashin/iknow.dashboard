@@ -581,7 +581,7 @@ function data_selection(current_data_type_one, graph_numb) // Проверка �
                     if (parseInt($(this).parent().attr('id')[13])==2)
                     { 
                     gridster.resize_widget($(this).closest('li'), 8, 4);                 
-                    canvas_element.attr('width','1300');
+                    canvas_element.attr('width','1250');
                     canvas_element.attr('height','600');
                     }   
                     if (parseInt($(this).parent().attr('id')[13])==3)
@@ -722,13 +722,16 @@ var events_graph = function(type) {
 
         $(".radio input")
             .click(function () { // Меняем день на неделю и обратно у выбранного графика на странице распределения событий
-
             bar_graph = [];
             bar_graph_labels = [];
             selector = 'second';
             favorites_check = 1;
             favorites_check_dynamic = 0;
-            current_data_type = current_data_2;
+
+             if ($(".ui-tabs-selected a").text()=="Избранное") {
+
+              current_data_type = current_data_2; 
+          }
             var change_id = parseInt($(this)
                 .attr('id')[7] + $(this)
                 .attr('id')[8]);

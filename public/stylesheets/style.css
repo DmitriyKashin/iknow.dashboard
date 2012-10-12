@@ -70,12 +70,14 @@ h1 {
 	max-width: 1000px; 
 	min-width:700px;
 	min-height:350px;
+
 }
 
 #ui-tabs-2
 {
     min-height:600px;
 	height:auto;
+
 }
 #ui-tabs-3
 {
@@ -93,7 +95,7 @@ h1 {
 {
 	width:1000px;
 	 height:400px;
-	  margin-top:-100px;
+	  margin-top:-50px;
 	   margin-left:40%; 
 	    min-width:800px; 
 	    min-height:350px;
@@ -130,13 +132,14 @@ h1 {
 	 margin-top:-25px; 
 	 width:200px; 
 	 margin-left:60%;
+	 z-index:1;
 }
 #param {
 	left:900px;
 	top:105px;
 	width:1000px;
 	height:120px; 
-
+	z-index:100;
 	padding-top:30px;
 	
 	position:absolute;
@@ -168,6 +171,7 @@ margin-left:5px;
 	padding:5px;
 	border:3px groove orange;
 	display:block;
+	max-width:1300px;
 
 
 }

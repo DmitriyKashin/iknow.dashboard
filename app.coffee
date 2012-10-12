@@ -33,7 +33,7 @@ first_metric = []
 #----------------------------------------------------------------Сумма событий каждого типа за последний законч. день и последняя законч. неделя (ПН-ВС)
 change = []
 column =
-  day :null
+  day :null 
   week :null
 predict = types.eventSet()
 growth =
@@ -45,7 +45,7 @@ growth =
 #----------------------------------------------------------------Массив из 67 изменений часов и минут ([0..6] часы, [7-66] минуты)
 app.get "/dataset", (req, res) ->
     if req.params.value is 'trouble'
-      console.log 'oshibka'
+      console.log 'oshibka' 
       res.send null
     else  
       res.send
@@ -71,7 +71,7 @@ getDataForColumn = () ->
     column.week = for_column.outWeek
 #-----------------------------------------------------------------------------Функции для ожидаемого
 for_predict = null
-tmp = null 
+tmp = null
 coeffs = null
 getDataForPredict = () ->
   predict_file.getInitData (callback) ->
